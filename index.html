@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Joao Vitor A - Portfolio</title>
+
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+
+    <body class="bg-gray-100">
+        <nav class="bg-green-400 py-4">
+            <div class="container mx-auto flex justify-between items-center px-6">
+                <div id="profile" class="flex-column items-center space-x-4">
+                    <span id="profile-name" class="text-lg font-bold">João Vitor Antunes da Silva</span>
+
+                    <div class="contact-list">
+                        <div class="contact-item flex items-center space-x-2">
+                            <figure class="contact-icon">
+                                <img src="assets/images/envelope.png" alt="Email icon" class="w-5 h-5">
+                            </figure>
+                            <a href="mailto:joaovitor14mju@gmail.com">joaovitor14mju@gmail.com</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-menu hidden md:flex space-x-8">
+                    <a class="topmenu-link hover:bg-green-500 rounded-md" href="#about-me">About Me</a>
+                    <a class="topmenu-link hover:bg-green-500 rounded-md" href="#skills">Skills</a>
+                    <a class="topmenu-link hover:bg-green-500 rounded-md" href="#projects">Projects</a>
+                </div>
+
+                <!-- Mobile Menu Icon -->
+                <div class="md:hidden">
+                    <button id="menu-toggle" class="text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden bg-green-400 px-6 pt-6 md:hidden">
+                <a class="block text-white hover:bg-green-500 rounded-md px-1" href="#about-me">About Me</a>
+                <a class="block text-white hover:bg-green-500 rounded-md px-1" href="#skills">Skills</a>
+                <a class="block text-white hover:bg-green-500 rounded-md px-1" href="#projects">Projects</a>
+            </div>
+
+            <script>
+                const menuToggle = document.getElementById('menu-toggle');
+                const mobileMenu = document.getElementById('mobile-menu');
+
+                menuToggle.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');  // Toggle the hidden class
+                });
+            </script>
+        </nav>
+
+        <section id="about-me" class="text-center py-10">
+            <h2 class="text-3xl font-semibold mb-6">About Me</h2>
+            <figure id="profile-picture">
+                <img src="assets/images/me.png" alt="Profile picture" class="w-80 h-80 md:w-96 md:h-96 rounded-full mx-auto border-4 border-green-500 shadow-lg">
+            </figure>
+
+            <p class="info-text font-bold text-lg text-gray-700 p-14">
+                Hallo! I'm João Vitor. Welcome to my portfolio! Feel free to explore and check on some of my work.
+            </p>
+        </section>
+
+        <section id="skills" class="py-10 bg-gray-200">
+            <h2 class="text-3xl font-semibold mb-6 text-center">Skills</h2>
+
+            <div class="skills-list grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 px-4">
+                <div class="skills-item text-center p-4 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                    <figure class="skills-icon mb-3">
+                        <img src="assets/images/html5.png" alt="HTML5" class="w-16 h-16 mx-auto"/>
+                    </figure>
+                    <h6 class="font-medium text-lg">HTML</h6>
+                </div>
+
+                <div class="skills-item text-center p-4 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                    <figure class="skills-icon mb-3">
+                        <img src="assets/images/CSS3.png" alt="CSS3" class="w-16 h-16 mx-auto"/>
+                    </figure>
+                    <h6 class="font-medium text-lg">CSS</h6>
+                </div>
+
+                <div class="skills-item text-center p-4 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                    <figure class="skills-icon mb-3">
+                        <img src="assets/images/js.jpeg" alt="JavaScript" class="w-16 h-16 mx-auto"/>
+                    </figure>
+                    <h6 class="text-lg font-medium">Javascript</h6>
+                </div>
+
+                <div class="skills-item text-center p-4 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                    <figure class="skills-icon mb-3">
+                        <img src="assets/images/node.png" alt="NodeJS" class="w-16 h-16 mx-auto"/>
+                    </figure>
+                    <h6 class="font-medium text-lg">NodeJS</h6>
+                </div>
+
+                <div class="skills-item text-center p-4 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                    <figure class="skills-icon mb-3">
+                        <img src="assets/images/python.png" alt="Python" class="w-16 h-16 mx-auto"/>
+                    </figure>
+                    <h6 class="font-medium text-lg">Python</h6>
+                </div>
+
+                <div class="skills-item text-center p-4 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                    <figure class="skills-icon mb-3">
+                        <img src="assets/images/cpp.png" alt="C++" class="w-16 h-16 mx-auto"/>
+                    </figure>
+                    <h6 class="font-medium text-lg">C++</h6>
+                </div>
+
+                <div class="skills-item text-center p-4 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                    <figure class="skills-icon mb-3">
+                        <img src="assets/images/csharp.png" alt="C#" class="w-16 h-16 mx-auto"/>
+                    </figure>
+                    <h6 class="font-medium text-lg">C#</h6>
+                </div>
+
+                <div class="skills-item text-center p-4 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                    <figure class="skills-icon mb-3">
+                        <img src="assets/images/haskell.png" alt="Haskell" class="w-16 h-16 mx-auto"/>
+                    </figure>
+                    <h6 class="font-medium text-lg">Haskell</h6>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="p-6">
+            <h2 class="font-semibold text-3xl mb-6">My Projects</h2>
+
+            <div class="projects-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="projects-item bg-white rounded-lg shadow-lg hover:scale-105 transition-transform transform">
+                    <div class="p-4">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Unit Conversion Website</h3>
+                        <p class="text-gray-600 mb-4">A simple website for converting units of measurement.</p>
+                        <a href="unit-conversion/index.html" class="text-blue-500 hover:underline">Check it out</a>
+                    </div>
+                </div>
+
+                <!-- Add more projects in the same format -->
+                <div class="projects-item bg-white rounded-lg shadow-lg hover:scale-105 transition-transform transform">
+                    <div class="p-4">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Solar System Simulation</h3>
+                        <p class="text-gray-600 mb-4">A web-based simulation of the solar system using HTML and TailwindCSS.</p>
+                        <a href="solar-system/index.html" class="text-blue-500 hover:underline">Check it out</a>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-center text-lg text-gray-700 mt-6">You can check more of my work on my <a href="https://github.com/Erwin5642" class="text-blue-500 hover:underline">GitHub</a></p>
+
+            <!-- GitHub Link -->
+            <div class="contact-item flex items-center justify-center mt-4">
+                <figure class="contact-icon mr-2">
+                    <img src="assets/images/github.png" alt="Github" class="w-6 h-6">
+                </figure>
+                <a href="https://github.com/Erwin5642" class="text-blue-500 text-xl hover:underline">Erwin5642</a>
+            </div>
+        </section>
+
+        <script src="script.js" defer></script>
+    </body>
+</html>

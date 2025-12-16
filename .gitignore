@@ -1,0 +1,17 @@
+# JetBrains IDE files
+.idea/
+*.iml
+
+# Node / JavaScript dependencies (if applicable)
+node_modules/
+
+# Logs and temp
+*.log
+*.tmp
+.DS_Store  # macOS
+Thumbs.db  # Windows
+
+# Build / output folders
+dist/
+build/
+out/

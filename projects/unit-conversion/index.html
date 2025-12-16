@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Unit Conversion</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="script.js"></script>
+    </head>
+    <body>
+        <section id="home">
+            <header>
+                Unit Conversion
+            </header>
+            <nav>
+                <a href="#temperature" class="top-menu">Temperature</a>
+                <a href="#weight" class="top-menu">Weight</a>
+                <a href="#distance" class="top-menu">Distance</a>
+            </nav>
+        </section>
+
+        <div id="all-conversion">
+            <section id="temperature" class="convert-panel temperature">
+                <figure>
+                    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0101EN-SkillsNetwork/labs/Theia%20Labs/02%20-%20HTML5%20Elements/images/thermo.png" alt="Thermometer">
+                    <figcaption>Celsius to Fahrenheit</figcaption>
+                </figure>
+
+                <form>
+                    <fieldset>
+                        <legend>Temperature</legend>
+
+                        <label for="celsius">Celsius</label>
+                        <br>
+                        <input id="celsius" type="number">
+                        <br><br>
+                        <button type="button" onclick="celsiusToFahrenheit()">Convert</button>
+                        <br><br>
+                        <label for="fahrenheit">Fahrenheit</label>
+                        <br>
+                        <input id="fahrenheit" type="number">
+                    </fieldset>
+
+                    <aside>
+                        Formula: (C × 9/5) + 32
+                    </aside>
+                </form>
+            </section>
+
+            <section id="weight" class="convert-panel weight">
+                <figure>
+                    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0101EN-SkillsNetwork/labs/Theia%20Labs/02%20-%20HTML5%20Elements/images/weight.png" alt="Weight scale">
+                    <figcaption>Kilograms to Pounds</figcaption>
+                </figure>
+
+                <form>
+                    <fieldset>
+                        <legend>Weight</legend>
+
+                        <label for="kg">Kilograms</label>
+                        <br>
+                        <input id="kg" type="number">
+                        <br><br>
+                        <button type="button" onclick="kgToPound()">Convert</button>
+                        <br><br>
+                        <label for="lb">Pounds</label>
+                        <br>
+                        <input id="lb" type="number">
+                    </fieldset>
+
+                    <aside>
+                        Formula: kg × 2.205
+                    </aside>
+                </form>
+            </section>
+
+            <section id="distance" class="convert-panel distance">
+                <figure>
+                    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0101EN-SkillsNetwork/labs/Theia%20Labs/02%20-%20HTML5%20Elements/images/speedo.png" alt="Speedometer">
+                    <figcaption>Kilometers to Miles</figcaption>
+                </figure>
+
+                <form>
+                    <fieldset>
+                        <legend>Distance</legend>
+
+                        <label for="km">Kilometers</label>
+                        <br>
+                        <input id="km" type="number">
+                        <br><br>
+                        <button type="button" onclick="kmToMiles()">Convert</button>
+                        <br><br>
+                        <label for="miles">Miles</label>
+                        <br>
+                        <input id="miles" type="number">
+                    </fieldset>
+
+                    <aside>
+                        Formula: km ÷ 1.609
+                    </aside>
+                </form>
+            </section>
+        </div>
+        <!-- HOME BUTTON -->
+        <a href="#home" id="go-home" class="icon-button">
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-CD0101EN-SkillsNetwork/labs/Theia%20Labs/02%20-%20HTML5%20Elements/images/home.svg" alt="home"/>
+        </a>
+
+        <footer>
+            Learn more about HTML and CSS as a part of IBM Fullstack Cloud Developer Certification
+        </footer>
+    </body>
+</html>
