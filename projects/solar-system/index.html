@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solar System - No Scroll</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Solar System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @keyframes orbit {
@@ -24,7 +24,7 @@
             position: absolute;
             width: 160%;
             height: 160%;
-            border: 10px solid rgba(194, 167, 107, 0.4);
+            border: 4px solid rgba(194, 167, 107, 0.4);
             border-radius: 50%;
             top: 50%;
             left: 50%;
@@ -33,27 +33,34 @@
 
         .orbit-ring {
             position: absolute;
-            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border: 1px dashed rgba(255, 255, 255, 0.3);
             border-radius: 100%;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
         }
+
+        .solar-system-container {
+            --base-size: 670px;
+
+            transform: scale(min(calc(90vw / var(--base-size)), calc(80vh / var(--base-size))));
+            transition: transform 0.3s ease-out;
+        }
     </style>
 </head>
-<body class="bg-slate-900 h-screen overflow-hidden flex flex-col">
+<body class="bg-slate-900 h-dvh overflow-hidden flex flex-col items-center">
 
-<header class="w-full p-4 md:p-6 border-b border-white/10">
-    <h1 class="text-xl md:text-2xl text-white font-light uppercase">
+<header class="w-full py-3 px-6 border-b border-white/5 z-20 text-center">
+    <h1 class="text-sm md:text-xl text-white font-light uppercase tracking-[0.3em]">
         Solar <span class="font-bold text-yellow-500">System</span>
     </h1>
 </header>
 
-<main class="flex-grow relative flex justify-center items-center overflow-hidden">
+<div class="flex-grow w-full relative flex justify-center items-center overflow-hidden">
 
-    <div class="relative scale-[0.22] xs:scale-[0.35] sm:scale-[0.5] md:scale-[0.7] lg:scale-[0.85] xl:scale-100">
+    <div class="solar-system-container relative flex items-center justify-center">
 
-        <div class="absolute w-16 h-16 bg-yellow-400 rounded-full blur-[1px] shadow-[0_0_60px_#facc15] -translate-x-1/2 -translate-y-1/2 z-10"></div>
+        <div class="absolute w-16 h-16 bg-yellow-400 rounded-full blur-[1px] shadow-[0_0_60px_#facc15] z-10"></div>
 
         <div class="orbit-ring w-[90px] h-[90px]"></div>
         <div class="planet-orbit w-2 h-2 bg-gray-400" style="--orbit-radius: 45px; --orbit-duration: 3s; margin-top: -4px; margin-left: -4px;"></div>
@@ -80,6 +87,7 @@
         <div class="planet-orbit w-6 h-6 bg-blue-700" style="--orbit-radius: 335px; --orbit-duration: 100s; margin-top: -12px; margin-left: -12px;"></div>
 
     </div>
-</main>
+</div>
+
 </body>
 </html>
