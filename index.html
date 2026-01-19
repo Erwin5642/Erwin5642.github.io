@@ -1,233 +1,231 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Joao Vitor A - Portfolio</title>
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-        <link rel="manifest" href="/site.webmanifest">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joao Vitor A - Portfolio</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
 
-        <script src="https://cdn.tailwindcss.com"></script>
-    </head>
+<body class="bg-gray-900 text-gray-200">
 
-    <body class="bg-slate-500">
-        <nav class="fixed w-full top-0 z-50 bg-green-400/80 backdrop-blur-md py-3">
-            <div class="container mx-auto flex justify-between items-center px-6">
-                <div id="profile" class="flex-column items-center space-x-4">
-                    <span id="profile-name" class="text-lg font-bold">João Vitor Antunes da Silva</span>
-
-                    <div class="contact-list">
-                        <div class="contact-item font-bold text-lg flex justify-center mx-10 items-center space-x-2 bg-green-300 rounded-xl">
-                            <figure class="contact-icon">
-                                <img src="assets/images/envelope.png" alt="Email icon" class="w-5 h-5">
-                            </figure>
-                            <a href="mailto:joaovitor14mju@gmail.com">Contact me</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="nav-menu hidden md:flex space-x-8">
-                    <a class="topmenu-link p-2 bg-green-300 rounded-xl font-bold hover:bg-green-600 transition" href="#about-me">About Me</a>
-                    <a class="topmenu-link p-2 bg-green-300 rounded-xl font-bold hover:bg-green-600 transition" href="#skills">Skills</a>
-                    <a class="topmenu-link p-2 bg-green-300 rounded-xl font-bold hover:bg-green-600 transition" href="#projects">Projects</a>
-                </div>
-
-                <!-- Mobile Menu Icon -->
-                <div class="md:hidden">
-                    <button id="menu-toggle" class="text-white">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
+<!-- Navbar -->
+<nav class="fixed w-full top-0 z-50 bg-gray-800/90 backdrop-blur-md py-3">
+    <div class="container mx-auto flex justify-between items-center px-6">
+        <div id="profile" class="flex-column items-center space-x-4">
+            <span id="profile-name" class="text-lg font-bold text-emerald-500">João Vitor Antunes da Silva</span>
+            <div class="contact-list">
+                <div class="contact-item font-bold text-lg flex justify-center mx-10 items-center space-x-2 bg-gray-700 rounded-xl">
+                    <figure class="contact-icon">
+                        <img src="assets/images/envelope.png" alt="Email icon" class="w-5 h-5">
+                    </figure>
+                    <a href="mailto:joaovitor14mju@gmail.com" class="hover:text-white transition">Contact me</a>
                 </div>
             </div>
+        </div>
 
-            <!-- Mobile Menu -->
-            <div id="mobile-menu" class="hidden bg-green-400 px-6 pt-6 md:hidden">
-                <a class="block text-white hover:bg-green-500 rounded-md px-1" href="#about-me">About Me</a>
-                <a class="block text-white hover:bg-green-500 rounded-md px-1" href="#skills">Skills</a>
-                <a class="block text-white hover:bg-green-500 rounded-md px-1" href="#projects">Projects</a>
-            </div>
+        <!-- Desktop Menu -->
+        <div class="nav-menu hidden md:flex space-x-8">
+            <a class="topmenu-link p-2 bg-emerald-500 text-gray-900 rounded-xl font-bold hover:bg-emerald-600 transition" href="#about-me">About Me</a>
+            <a class="topmenu-link p-2 bg-emerald-500 text-gray-900 rounded-xl font-bold hover:bg-emerald-600 transition" href="#skills">Skills</a>
+            <a class="topmenu-link p-2 bg-emerald-500 text-gray-900 rounded-xl font-bold hover:bg-emerald-600 transition" href="#projects">Projects</a>
+        </div>
 
-            <script>
-                const menuToggle = document.getElementById('menu-toggle');
-                const mobileMenu = document.getElementById('mobile-menu');
+        <!-- Mobile Menu Icon -->
+        <div class="md:hidden">
+            <button id="menu-toggle" class="text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
 
-                menuToggle.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('hidden');  // Toggle the hidden class
-                });
-            </script>
-        </nav>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden bg-gray-800/90 px-6 pt-6 md:hidden">
+        <a class="block text-gray-200 hover:bg-gray-700 rounded-md px-1 py-2 transition" href="#about-me">About Me</a>
+        <a class="block text-gray-200 hover:bg-gray-700 rounded-md px-1 py-2 transition" href="#skills">Skills</a>
+        <a class="block text-gray-200 hover:bg-gray-700 rounded-md px-1 py-2 transition" href="#projects">Projects</a>
+    </div>
 
-        <section class="pt-32 pb-20 px-6 border-b border-gray-100 bg-gradient-to-b from-white to-slate-100">
-            <div class="container mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</nav>
 
-                <div class="text-left max-w-2xl">
-                    <h1 class="text-4xl md:text-6xl font-black text-gray-900 mb-6 leading-tight">
-                        Breaking down <span class="text-green-600">complex problems</span> and building clear, efficient<span class="text-green-600"> solutions.</span>
-                    </h1>
-                    <p class="text-lg text-gray-600 mb-8 leading-relaxed">
-                        Working with AI, data-driven systems, simulations, and interactive applications.
-                    </p>
-                    <div class="flex gap-4">
-                        <a href="#projects" class="px-6 py-3 bg-green-500 text-white rounded-xl font-bold hover:bg-green-600 transition shadow-lg">
-                            View Projects
-                        </a>
-                        <a href="https://github.com/Erwin5642" class="px-6 py-3 bg-white text-gray-700 border border-gray-200 rounded-xl font-bold hover:bg-gray-50 transition">
-                            GitHub
-                        </a>
-                    </div>
-                </div>
-
-                <div class="hidden lg:block">
-                    <div class="w-64 h-64 bg-green-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
-                </div>
-            </div>
-        </section>
-
-        <section id="about-me" class="text-center py-10 bg-gradient-to-b from-white to-slate-100">
-            <h2 class="text-3xl font-semibold mb-6">About Me</h2>
-            <figure id="profile-picture">
-                <img src="assets/images/me.jpg"
-                     alt="Profile picture"
-                     class="w-80 h-80 md:w-96 md:h-96 object-cover object-center rounded-full mx-auto border-4 border-green-500 shadow-lg transition-transform duration-500 hover:scale-105">
-            </figure>
-
-            <p class="info-text font-medium text-lg text-gray-700 px-6 py-8 max-w-3xl mx-auto leading-relaxed">
-                I’m a final-year Computer Science student with hands-on experience building AI-driven applications,
-                data-oriented systems, and interactive simulations, including virtual reality environments supported
-                by intelligent agents.
-                <br><br>
-                My work is guided by analytical thinking and a strong mathematical foundation. I primarily work
-                with C#, C++, Python, and Julia, and I value clarity, correctness, and well-structured solutions.
+<!-- Hero Section -->
+<section class="pt-32 pb-20 px-6 bg-gradient-to-b from-gray-900 to-gray-800 border-b border-gray-700">
+    <div class="container mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
+        <div class="text-left max-w-2xl">
+            <h1 class="text-4xl md:text-6xl font-black text-gray-100 mb-6 leading-tight">
+                Breaking down <span class="text-emerald-500">complex problems</span> and building clear, efficient<span class="text-emerald-500"> solutions.</span>
+            </h1>
+            <p class="text-lg text-gray-300 mb-8 leading-relaxed">
+                Working with AI, data-driven systems, simulations, and interactive applications.
             </p>
-        </section>
-
-        <section id="skills" class="py-10 bg-gradient-to-b from-white to-slate-100">
-            <h2 class="text-3xl font-semibold mb-6 text-center">Skills</h2>
-
-            <div class="skills-list grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 px-4">
-                <div class="skills-item text-center p-4 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl">
-                    <figure class="skills-icon mb-3">
-                        <img src="assets/images/html5.png" alt="HTML5" class="w-16 h-16 mx-auto"/>
-                    </figure>
-                    <h6 class="font-medium text-lg">HTML</h6>
-                </div>
-
-                <div class="skills-item text-center p-4 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl">
-                    <figure class="skills-icon mb-3">
-                        <img src="assets/images/CSS3.png" alt="CSS3" class="w-16 h-16 mx-auto"/>
-                    </figure>
-                    <h6 class="font-medium text-lg">CSS</h6>
-                </div>
-
-                <div class="skills-item text-center p-4 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl">
-                    <figure class="skills-icon mb-3">
-                        <img src="assets/images/js.jpeg" alt="JavaScript" class="w-16 h-16 mx-auto"/>
-                    </figure>
-                    <h6 class="text-lg font-medium">Javascript</h6>
-                </div>
-
-                <div class="skills-item text-center p-4 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl">
-                    <figure class="skills-icon mb-3">
-                        <img src="assets/images/node.png" alt="NodeJS" class="w-16 h-16 mx-auto"/>
-                    </figure>
-                    <h6 class="font-medium text-lg">NodeJS</h6>
-                </div>
-
-                <div class="skills-item text-center p-4 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl">
-                    <figure class="skills-icon mb-3">
-                        <img src="assets/images/python.png" alt="Python" class="w-16 h-16 mx-auto"/>
-                    </figure>
-                    <h6 class="font-medium text-lg">Python</h6>
-                </div>
-
-                <div class="skills-item text-center p-4 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl">
-                    <figure class="skills-icon mb-3">
-                        <img src="assets/images/cpp.png" alt="C++" class="w-16 h-16 mx-auto"/>
-                    </figure>
-                    <h6 class="font-medium text-lg">C++</h6>
-                </div>
-
-                <div class="skills-item text-center p-4 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl">
-                    <figure class="skills-icon mb-3">
-                        <img src="assets/images/csharp.png" alt="C#" class="w-16 h-16 mx-auto"/>
-                    </figure>
-                    <h6 class="font-medium text-lg">C#</h6>
-                </div>
-
-                <div class="skills-item text-center p-4 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl">
-                    <figure class="skills-icon mb-3">
-                        <img src="assets/images/haskell.png" alt="Haskell" class="w-16 h-16 mx-auto"/>
-                    </figure>
-                    <h6 class="font-medium text-lg">Haskell</h6>
-                </div>
+            <div class="flex gap-4">
+                <a href="#projects" class="px-6 py-3 bg-emerald-500 text-gray-900 rounded-xl font-bold hover:bg-emerald-600 transition shadow-lg">
+                    View Projects
+                </a>
             </div>
-        </section>
+        </div>
+    </div>
+</section>
 
-        <section id="projects" class="p-6 bg-gradient-to-b from-white to-slate-100">
-            <h2 class="font-semibold text-3xl mb-6">My Projects</h2>
+<!-- About Me Section -->
+<section id="about-me" class="text-center py-10 bg-gradient-to-b from-gray-900 to-gray-800">
+    <h2 class="text-3xl font-semibold mb-6 text-gray-100">About Me</h2>
+    <figure id="profile-picture">
+        <img src="assets/images/me.jpg"
+             alt="Profile picture"
+             class="w-80 h-80 md:w-96 md:h-96 object-cover object-center rounded-full mx-auto border-4 border-emerald-500 shadow-md transition-transform duration-500 hover:scale-105 hover:shadow-emerald-500">
+    </figure>
+    <p class="info-text font-medium text-lg text-gray-300 px-6 py-8 max-w-3xl mx-auto leading-relaxed">
+        I’m a final-year Computer Science student with hands-on experience building AI-driven applications,
+        data-oriented systems, and interactive simulations, including virtual reality environments supported
+        by intelligent agents.
+        <br><br>
+        My work is guided by analytical thinking and a strong mathematical foundation. I primarily work
+        with C#, C++, Python, and Julia, and I value clarity, correctness, and well-structured solutions.
+    </p>
+</section>
 
-            <div class="projects-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="projects-item group bg-white rounded-xl shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300 overflow-hidden">
+<!-- Skills Section -->
+<section id="skills" class="py-10 bg-gray-900">
+    <h2 class="text-3xl font-semibold mb-6 text-center text-gray-100">Skills</h2>
+    <div class="skills-list grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 px-4">
+        <!-- Skill Item Template -->
+        <div class="skills-item text-center p-4 bg-gray-800 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl">
+            <figure class="skills-icon mb-3">
+                <img src="assets/images/html5.png" alt="HTML5" class="w-16 h-16 mx-auto"/>
+            </figure>
+            <h6 class="font-medium text-lg text-gray-100">HTML</h6>
+        </div>
 
-                    <figure class="h-48 overflow-hidden">
-                        <img src="assets/images/unit-conversion-screenshot.png" alt="unit-conversion" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"/>
-                    </figure>
+        <div class="skills-item text-center p-4 bg-gray-800 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl">
+            <figure class="skills-icon mb-3">
+                <img src="assets/images/CSS3.png" alt="CSS3" class="w-16 h-16 mx-auto"/>
+            </figure>
+            <h6 class="font-medium text-lg text-gray-100">CSS</h6>
+        </div>
 
-                    <div class="p-5">
-                        <h3 class="text-xl font-bold text-gray-800 mb-2">Unit Conversion Website</h3>
-                        <p class="text-gray-600 mb-4 text-sm leading-relaxed">A simple website for converting units of measurement.</p>
+        <div class="skills-item text-center p-4 bg-gray-800 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl">
+            <figure class="skills-icon mb-3">
+                <img src="assets/images/js.png" alt="JavaScript" class="w-16 h-16 mx-auto"/>
+            </figure>
+            <h6 class="text-lg font-medium text-gray-100">JavaScript</h6>
+        </div>
 
-                        <div class="flex gap-2 mb-6">
-                            <span class="px-2 py-1 text-[10px] font-bold uppercase bg-blue-50 text-blue-500 rounded">Tailwind</span>
-                            <span class="px-2 py-1 text-[10px] font-bold uppercase bg-yellow-50 text-yellow-600 rounded">JavaScript</span>
-                            <span class="px-2 py-1 text-[10px] font-bold uppercase bg-orange-50 text-orange-600 rounded">HTML</span>
-                        </div>
+        <div class="skills-item text-center p-4 bg-gray-800 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl">
+            <figure class="skills-icon mb-3">
+                <img src="assets/images/node.png" alt="NodeJS" class="w-20 h-16 mx-auto"/>
+            </figure>
+            <h6 class="font-medium text-lg text-gray-100">NodeJS</h6>
+        </div>
 
-                        <a href="projects/unit-conversion/index.html" class="inline-block w-full text-center py-2 rounded-lg bg-green-500 text-white font-bold shadow-lg hover:bg-green-600 hover:text-white transition-all">
-                            Check it out
-                        </a>
-                    </div>
+        <div class="skills-item text-center p-4 bg-gray-800 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl">
+            <figure class="skills-icon mb-3">
+                <img src="assets/images/python.png" alt="Python" class="w-16 h-16 mx-auto"/>
+            </figure>
+            <h6 class="font-medium text-lg text-gray-100">Python</h6>
+        </div>
+
+        <div class="skills-item text-center p-4 bg-gray-800 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl">
+            <figure class="skills-icon mb-3">
+                <img src="assets/images/cpp.png" alt="C++" class="w-16 h-16 mx-auto"/>
+            </figure>
+            <h6 class="font-medium text-lg text-gray-100">C++</h6>
+        </div>
+
+        <div class="skills-item text-center p-4 bg-gray-800 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl">
+            <figure class="skills-icon mb-3">
+                <img src="assets/images/csharp.png" alt="C#" class="w-16 h-16 mx-auto"/>
+            </figure>
+            <h6 class="font-medium text-lg text-gray-100">C#</h6>
+        </div>
+
+        <div class="skills-item text-center p-4 bg-gray-800 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl">
+            <figure class="skills-icon mb-3">
+                <img src="assets/images/haskell.png" alt="Haskell" class="w-16 h-16 mx-auto"/>
+            </figure>
+            <h6 class="font-medium text-lg text-gray-100">Haskell</h6>
+        </div>
+    </div>
+</section>
+
+<!-- Projects Section -->
+<section id="projects" class="p-6 bg-gray-900">
+    <h2 class="font-semibold text-3xl mb-6 text-gray-100">My Projects</h2>
+    <div class="projects-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- Unit Conversion Project -->
+        <div class="projects-item group bg-gray-800 rounded-xl shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300 overflow-hidden">
+            <figure class="h-48 overflow-hidden">
+                <img src="assets/images/unit-conversion-screenshot.png" alt="unit-conversion" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"/>
+            </figure>
+            <div class="p-5">
+                <h3 class="text-xl font-bold text-gray-100 mb-2">Unit Conversion Website</h3>
+                <p class="text-gray-300 mb-4 text-sm leading-relaxed">A simple website for converting units of measurement.</p>
+                <div class="flex gap-2 mb-6">
+                    <span class="px-2 py-1 text-[10px] font-bold uppercase bg-blue-900 text-blue-400 rounded">Tailwind</span>
+                    <span class="px-2 py-1 text-[10px] font-bold uppercase bg-yellow-900 text-yellow-400 rounded">JavaScript</span>
+                    <span class="px-2 py-1 text-[10px] font-bold uppercase bg-orange-900 text-orange-400 rounded">HTML</span>
                 </div>
+                <a href="projects/unit-conversion/index.html" class="inline-block w-full text-center py-2 rounded-lg bg-emerald-500 text-gray-900 font-bold shadow-lg hover:bg-emerald-600 hover:text-gray-100 transition-all">
+                    Check it out
+                </a>
+            </div>
+        </div>
 
-                <div class="projects-item group bg-white rounded-xl shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300 overflow-hidden">
-
-                    <figure class="h-48 overflow-hidden">
-                        <img src="assets/images/solar-system-screenshot.png" alt="unit-conversion" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"/>
-                    </figure>
-
-                    <div class="p-5">
-                        <h3 class="text-xl font-bold text-gray-800 mb-2">Solar System Website</h3>
-                        <p class="text-gray-600 mb-4 text-sm leading-relaxed">A Solar System Animation with HTML and TailwindCSS.</p>
-
-                        <div class="flex gap-2 mb-6">
-                            <span class="px-2 py-1 text-[10px] font-bold uppercase bg-blue-50 text-blue-500 rounded">Tailwind</span>
-                            <span class="px-2 py-1 text-[10px] font-bold uppercase bg-orange-50 text-orange-600 rounded">HTML</span>
-                        </div>
-
-                        <a href="projects/solar-system/index.html" class="inline-block w-full text-center py-2 rounded-lg bg-green-500 text-white font-bold shadow-lg hover:bg-green-600 hover:text-white transition-all">
-                            Check it out
-                        </a>
-                    </div>
+        <!-- Solar System Project -->
+        <div class="projects-item group bg-gray-800 rounded-xl shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300 overflow-hidden">
+            <figure class="h-48 overflow-hidden">
+                <img src="assets/images/solar-system-screenshot.png" alt="solar-system" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"/>
+            </figure>
+            <div class="p-5">
+                <h3 class="text-xl font-bold text-gray-100 mb-2">Solar System Website</h3>
+                <p class="text-gray-300 mb-4 text-sm leading-relaxed">A Solar System Animation with HTML and TailwindCSS.</p>
+                <div class="flex gap-2 mb-6">
+                    <span class="px-2 py-1 text-[10px] font-bold uppercase bg-blue-900 text-blue-400 rounded">Tailwind</span>
+                    <span class="px-2 py-1 text-[10px] font-bold uppercase bg-orange-900 text-orange-400 rounded">HTML</span>
                 </div>
+                <a href="projects/solar-system/index.html" class="inline-block w-full text-center py-2 rounded-lg bg-emerald-500 text-gray-900 font-bold shadow-lg hover:bg-emerald-600 hover:text-gray-100 transition-all">
+                    Check it out
+                </a>
             </div>
+        </div>
 
-            <p class="text-center text-lg text-gray-700 mt-6">You can check more of my work on my <a href="https://github.com/Erwin5642" class="text-blue-500 hover:underline">GitHub</a></p>
+    </div>
 
-            <!-- GitHub Link -->
-            <div class="contact-item flex items-center justify-center mt-4">
-                <figure class="contact-icon mr-2">
-                    <img src="assets/images/github.png" alt="Github" class="w-6 h-6">
-                </figure>
-                <a href="https://github.com/Erwin5642" class="text-blue-500 text-xl hover:underline">Erwin5642</a>
-            </div>
-        </section>
+    <p class="text-center text-lg text-gray-300 mt-6">You can check more of my work on my <a href="https://github.com/Erwin5642" class="text-blue-400 hover:underline">GitHub</a></p>
+</section>
 
-        <footer class="w-full bg-slate-500 text-center block p-4">
-            <span class="font-semibold">@ <script>document.write(new Date().getFullYear())</script> João Vitor A. da Silva. All Rights Reserved.</span>
-        </footer>
-    </body>
+<!-- Footer -->
+<footer class="w-full bg-gray-800 text-gray-200">
+    <div class="max-w-6xl mx-auto px-6 py-16 text-center space-y-8">
+        <div>
+            <h2 class="text-lg font-semibold">João Vitor A. da Silva</h2>
+        </div>
+        <nav class="flex justify-center gap-8 text-sm">
+            <a href="https://github.com/Erwin5642" class="hover:text-emerald-500 transition">GitHub</a>
+            <a href="https://www.linkedin.com/in/joao-vitor-antunes-da-silva/" class="hover:text-emerald-500 transition">LinkedIn</a>
+            <a href="mailto:joaovitor14mju@gmail.com" class="hover:text-emerald-500 transition">Email</a>
+        </nav>
+        <hr class="border-gray-600">
+        <p class="text-xs text-gray-400">
+            © <script>document.write(new Date().getFullYear())</script>
+            João Vitor A. da Silva. All rights reserved.
+        </p>
+    </div>
+</footer>
+
+</body>
 </html>
