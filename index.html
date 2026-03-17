@@ -75,11 +75,11 @@
     <div class="container mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
         <div class="text-left max-w-2xl">
             <h1 class="text-4xl md:text-6xl font-black text-gray-100 mb-6 leading-tight">
-                Software Engineer focused on <span class="text-emerald-500">AI, simulation</span> and <span class="text-emerald-500">scientific computing</span>
+                Software Engineer focused on <span class="text-emerald-500">AI </span> and <span class="text-emerald-500">High-Performance-Systems</span>
             </h1>
             <p class="text-lg text-gray-300 mb-8 leading-relaxed">
-                I design and build systems by modeling problems, studying their structure, and validating solutions through simulation and implementation.
-                My interests include distributed systems, complex systems, data science, machine learning and virtual environments with intelligent agents.
+                I model problems, validate ideas with simulation, and implement efficient, reproducible systems that scale.
+                My interests are distributed systems, full-stack development, complex systems, data science, machine learning, scientific computing and virtual environments with intelligent agents.
             </p>
             <div class="flex gap-4">
                 <a href="#projects" class="px-6 py-3 bg-emerald-500 text-gray-900 rounded-xl font-bold hover:bg-emerald-600 transition shadow-lg">
@@ -99,7 +99,6 @@
              class="w-72 h-72 md:w-96 md:h-96 object-cover object-center rounded-full mx-auto border-4 border-emerald-500 shadow-md transition-transform duration-500 hover:scale-105 hover:shadow-emerald-500">
     </figure>
     <div class="info-text font-medium text-lg text-gray-300 px-6 py-8 max-w-3xl mx-auto leading-relaxed">
-
         <p>
             I’m João Vitor — a software engineer and AI & VR researcher. I am an undergraduate at
             <strong>Universidade Estadual de Mato Grosso do Sul</strong>, where I develop research on
@@ -113,9 +112,7 @@
         </p>
 
         <p class="mt-4">
-            I design and implement systems in <strong>C++</strong>, <strong>Python</strong>,
-            <strong>Julia</strong>, and <strong>C#</strong>, with an emphasis on clarity,
-            correctness, performance, and reproducible experimentation.
+            Whether building real-time reactive web applications with JavaScript, Meteor, MongoDB, React or high-performance simulations in C++, Python, Julia, or C#, I prioritize architectural clarity, numerical correctness, and reproducible experimentation.
         </p>
 
     </div>
@@ -199,55 +196,33 @@
     </div>
 </section>
 
-
 <!-- Projects Section -->
 <section id="projects" class="p-6 bg-gray-800 border-b border-gray-700 max-w-6xl mx-auto my-5 border rounded-xl">
     <h2 class="font-semibold text-3xl mb-6 text-gray-100">Selected Projects</h2>
     <div class="projects-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-        <!-- Unit Conversion Project -->
-        <div class="projects-item group bg-gray-800 border border-gray-900 rounded-xl shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300 overflow-hidden">
+        <div class="projects-item group flex flex-col bg-gray-800 border border-gray-900 rounded-xl shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300 overflow-hidden">
             <figure class="h-48 overflow-hidden">
-                <img src="assets/images/unit-conversion-screenshot.png" alt="unit-conversion" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"/>
+                <img src="assets/images/beziers3d.png" alt="beziers3d" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"/>
             </figure>
-            <div class="p-5">
-                <h3 class="text-xl font-bold text-gray-100 mb-2">Unit Conversion</h3>
-                <p class="text-gray-300 mb-4 text-sm leading-relaxed">Lightweight web tool demonstrating clear UI patterns and structured client-side logic.</p>
+            <div class="p-5 flex flex-col flex-grow">
+                <h3 class="text-xl font-bold text-gray-100 mb-2">Beziers3d</h3>
+                <p class="text-gray-300 mb-4 text-sm leading-relaxed">Interactive 3D Bézier curve simulator written in C++ and OpenGL. Built to study parametrization, numerical stability, and interactive geometry tooling.</p>
                 <div class="flex gap-2 mb-6">
-                    <span class="px-2 py-1 text-[10px] font-bold uppercase bg-blue-900 text-blue-400 rounded">Tailwind</span>
-                    <span class="px-2 py-1 text-[10px] font-bold uppercase bg-yellow-900 text-yellow-400 rounded">JavaScript</span>
-                    <span class="px-2 py-1 text-[10px] font-bold uppercase bg-orange-900 text-orange-400 rounded">HTML</span>
+                    <span class="px-2 py-1 text-[10px] font-bold uppercase bg-blue-900 text-blue-400 rounded">C++</span>
+                    <span class="px-2 py-1 text-[10px] font-bold uppercase bg-emerald-900 text-emerald-400 rounded">OpenGL</span>
                 </div>
-                <a href="projects/unit-conversion/index.html" class="inline-block w-full text-center py-2 rounded-lg bg-emerald-500 text-gray-900 font-bold shadow-lg hover:bg-emerald-600 hover:text-gray-100 transition-all">
+                <a href="https://github.com/Erwin5642/Beziers3d" class="mt-auto inline-block w-full text-center py-2 rounded-lg bg-emerald-500 text-gray-900 font-bold shadow-lg hover:bg-emerald-600 hover:text-gray-100 transition-all">
                     Check it out
                 </a>
             </div>
         </div>
 
-        <!-- Solar System Project -->
-        <div class="projects-item group bg-gray-800 border border-gray-900 rounded-xl shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300 overflow-hidden">
-            <figure class="h-48 overflow-hidden">
-                <img src="assets/images/solar-system-screenshot.png" alt="solar-system" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"/>
-            </figure>
-            <div class="p-5">
-                <h3 class="text-xl font-bold text-gray-100 mb-2">Solar System</h3>
-                <p class="text-gray-300 mb-4 text-sm leading-relaxed">A spatial animation showing orbital relationships — an exercise in representation and animation timing.</p>
-                <div class="flex gap-2 mb-6">
-                    <span class="px-2 py-1 text-[10px] font-bold uppercase bg-blue-900 text-blue-400 rounded">Tailwind</span>
-                    <span class="px-2 py-1 text-[10px] font-bold uppercase bg-orange-900 text-orange-400 rounded">HTML</span>
-                </div>
-                <a href="projects/solar-system/index.html" class="inline-block w-full text-center py-2 rounded-lg bg-emerald-500 text-gray-900 font-bold shadow-lg hover:bg-emerald-600 hover:text-gray-100 transition-all">
-                    Check it out
-                </a>
-            </div>
-        </div>
-
-        <!-- To-Do -->
-        <div class="projects-item group bg-gray-800 border border-gray-900 rounded-xl shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300 overflow-hidden">
+        <div class="projects-item group flex flex-col bg-gray-800 border border-gray-900 rounded-xl shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300 overflow-hidden">
             <figure class="h-48 overflow-hidden">
                 <img src="assets/images/to_do_app.png" alt="to-do-meteor-app" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"/>
             </figure>
-            <div class="p-5">
+            <div class="p-5 flex flex-col flex-grow">
                 <h3 class="text-xl font-bold text-gray-100 mb-2">Real-time To-Do App</h3>
                 <p class="text-gray-300 mb-4 text-sm leading-relaxed">Realtime task application exploring client-server sync and reactive UX patterns using Meteor and React.</p>
                 <div class="flex gap-2 mb-6">
@@ -256,26 +231,43 @@
                     <span class="px-2 py-1 text-[10px] font-bold uppercase bg-yellow-900 text-yellow-400 rounded">JavaScript</span>
                     <span class="px-2 py-1 text-[10px] font-bold uppercase bg-orange-900 text-orange-400 rounded">HTML</span>
                 </div>
-                <a href="https://github.com/Erwin5642/to-do-list-meteor" class="inline-block w-full text-center py-2 rounded-lg bg-emerald-500 text-gray-900 font-bold shadow-lg hover:bg-emerald-600 hover:text-gray-100 transition-all">
-                    View repository
+                <a href="https://github.com/Erwin5642/to-do-list-meteor" class="mt-auto inline-block w-full text-center py-2 rounded-lg bg-emerald-500 text-gray-900 font-bold shadow-lg hover:bg-emerald-600 hover:text-gray-100 transition-all">
+                    Check it out
                 </a>
             </div>
         </div>
 
-        <!-- Beziers3d (technical highlight) -->
-        <div class="projects-item group bg-gray-800 border border-gray-900 rounded-xl shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300 overflow-hidden">
+        <div class="projects-item group flex flex-col bg-gray-800 border border-gray-900 rounded-xl shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300 overflow-hidden">
             <figure class="h-48 overflow-hidden">
-                <img src="assets/images/beziers3d.png" alt="beziers3d" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"/>
+                <img src="assets/images/solar-system-screenshot.png" alt="solar-system" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"/>
             </figure>
-            <div class="p-5">
-                <h3 class="text-xl font-bold text-gray-100 mb-2">Beziers3d</h3>
-                <p class="text-gray-300 mb-4 text-sm leading-relaxed">Interactive 3D Bézier curve simulator written in C++ and OpenGL. Built to study parametrization, numerical stability, and interactive geometry tooling.</p>
+            <div class="p-5 flex flex-col flex-grow">
+                <h3 class="text-xl font-bold text-gray-100 mb-2">Solar System</h3>
+                <p class="text-gray-300 mb-4 text-sm leading-relaxed">A spatial animation showing orbital relationships — an exercise in representation and animation timing.</p>
                 <div class="flex gap-2 mb-6">
-                    <span class="px-2 py-1 text-[10px] font-bold uppercase bg-blue-900 text-blue-400 rounded">C++</span>
-                    <span class="px-2 py-1 text-[10px] font-bold uppercase bg-emerald-900 text-emerald-400 rounded">OpenGL</span>
+                    <span class="px-2 py-1 text-[10px] font-bold uppercase bg-blue-900 text-blue-400 rounded">Tailwind</span>
+                    <span class="px-2 py-1 text-[10px] font-bold uppercase bg-orange-900 text-orange-400 rounded">HTML</span>
                 </div>
-                <a href="https://github.com/Erwin5642/Beziers3d" class="inline-block w-full text-center py-2 rounded-lg bg-emerald-500 text-gray-900 font-bold shadow-lg hover:bg-emerald-600 hover:text-gray-100 transition-all">
-                    View repository
+                <a href="projects/solar-system/index.html" class="mt-auto inline-block w-full text-center py-2 rounded-lg bg-emerald-500 text-gray-900 font-bold shadow-lg hover:bg-emerald-600 hover:text-gray-100 transition-all">
+                    Check it out
+                </a>
+            </div>
+        </div>
+
+        <div class="projects-item group flex flex-col bg-gray-800 border border-gray-900 rounded-xl shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300 overflow-hidden">
+            <figure class="h-48 overflow-hidden">
+                <img src="assets/images/unit-conversion-screenshot.png" alt="unit-conversion" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"/>
+            </figure>
+            <div class="p-5 flex flex-col flex-grow">
+                <h3 class="text-xl font-bold text-gray-100 mb-2">Unit Conversion</h3>
+                <p class="text-gray-300 mb-4 text-sm leading-relaxed">Lightweight web tool demonstrating clear UI patterns and structured client-side logic.</p>
+                <div class="flex gap-2 mb-6">
+                    <span class="px-2 py-1 text-[10px] font-bold uppercase bg-blue-900 text-blue-400 rounded">Tailwind</span>
+                    <span class="px-2 py-1 text-[10px] font-bold uppercase bg-yellow-900 text-yellow-400 rounded">JavaScript</span>
+                    <span class="px-2 py-1 text-[10px] font-bold uppercase bg-orange-900 text-orange-400 rounded">HTML</span>
+                </div>
+                <a href="projects/unit-conversion/index.html" class="mt-auto inline-block w-full text-center py-2 rounded-lg bg-emerald-500 text-gray-900 font-bold shadow-lg hover:bg-emerald-600 hover:text-gray-100 transition-all">
+                    Check it out
                 </a>
             </div>
         </div>
