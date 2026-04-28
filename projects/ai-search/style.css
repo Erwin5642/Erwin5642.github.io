@@ -1,0 +1,103 @@
+body {
+    display: flex;
+    height: 100vh;
+    margin: 0;
+}
+
+.canvas-container {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    display: block;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.canvas-container canvas {
+    display: block;
+}
+
+/* Menu */
+.toolbar {
+    width: 250px;
+    background-color: #2c3e50;
+    color: white;
+    padding: 20px;
+}
+
+/* Painéis */
+.panel {
+    margin-bottom: 30px;
+}
+.panel-title {
+    font-size: 14px;
+    text-transform: uppercase;
+    color: #bdc3c7;
+    margin-bottom: 10px;
+}
+
+/* Estilo para o título do grupo de opções */
+optgroup {
+    background-color: #2c3e50;
+    color: #3498db;
+    font-style: normal;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 15px;
+}
+
+/* Garante que as opções dentro do grupo voltem ao estilo normal */
+option {
+    background-color: #34495e;
+    color: white;
+    font-weight: normal;
+    text-transform: none;
+    font-size: 14px;
+    padding: 5px;
+}
+
+/* Flexbox reutilizável para qualquer grupo de botões */
+.btn-group {
+    display: flex;
+    flex-direction: column; /* Coloca um botão embaixo do outro */
+    gap: 8px;
+}
+
+/* Estilo Base dos botões */
+.btn {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.18s ease;
+}
+
+/* Estilos de Cor Específicos */
+.btn-tool { background: #ecf0f1; color: #333; }
+.btn-tool.active { background: #3498db; color: white; } /* Ferramenta selecionada */
+
+/* Hover escurece dentro do mesmo tom de cada botão */
+.btn-tool:not(.active):hover {
+    background-color: #d5dde0;
+}
+
+.btn-tool.active:hover {
+    background-color: #2980b9;
+}
+
+.btn-success { background: #2ecc71; color: white; }
+.btn-warning { background: #f39c12; color: white; }
+.btn-danger { background: #e74c3c; color: white; }
+
+.btn-success:hover {
+    background-color: #27ae60;
+}
+
+.btn-warning:hover {
+    background-color: #e67e22;
+}
+
+.btn-danger:hover {
+    background-color: #c0392b;
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Visualizador de Buscas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<aside class="toolbar">
+
+    <section class="pannel">
+        <label class="panel-title" for="algo-select">Busca selecionada:</label>
+        <select id="algo-select" class="form-select">
+            <optgroup label="Não Informadas">
+                <option value="bfs" selected>Busca em Largura (BFS)</option>
+                <option value="dfs">Busca em Profundidade (DFS)</option>
+                <option value="dijkstra">Dijkstra (Custo Uniforme)</option>
+            </optgroup>
+
+            <optgroup label="Informadas">
+                <option value="astar">A* (A-Estrela)</option>
+                <option value="greedy">Busca Gulosa (Greedy)</option>
+            </optgroup>
+        </select>
+    </section>
+
+    <section class="panel">
+        <h3 class="panel-title">Simulação</h3>
+        <div class="btn-group">
+            <button id="btn-start" class="btn btn-success">Começar</button>
+            <button id="btn-stop" class="btn btn-warning">Parar</button>
+            <button id="btn-reset" class="btn btn-danger">Resetar</button>
+        </div>
+    </section>
+
+    <section class="panel">
+        <h3 class="panel-title">Ferramentas</h3>
+        <div class="btn-group">
+            <button id="btn-add-node" class="btn btn-tool active">Adicionar Nodos</button>
+            <button id="btn-move-node" class="btn btn-tool">Mover Nodos</button>
+            <button id="btn-add-edge" class="btn btn-tool">Adicionar Arestas</button>
+        </div>
+    </section>
+
+</aside>
+
+<main class="canvas-container">
+    <canvas id="graphCanvas"></canvas>
+</main>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
