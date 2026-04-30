@@ -1,98 +1,133 @@
-/** Minimum drawable area beyond the viewport (px) so scrolling is possible without nodes. */
-const MIN_WORKSPACE_W = 1800;
-const MIN_WORKSPACE_H = 1100;
-
-/** Margin around farthest nodes when resizing the canvas backing store. */
-const NODE_PADDING = 80;
+const GRAPH_VIEW_PADDING_PX = 60;
 
 export class Renderer {
-    constructor(canvasId) {
-        this.canvas = document.getElementById(canvasId);
-        this.ctx = this.canvas.getContext('2d');
-        /** Kept so window resize expands canvas bounds when nodes overflow. */
-        this._lastGraph = null;
+  constructor(canvasId) {
+    this.canvas = document.getElementById(canvasId);
+    this.context = this.canvas.getContext('2d');
 
-        this.#syncCanvasDimensions();
-        requestAnimationFrame(() => this.#syncCanvasDimensions());
-        window.addEventListener('resize', () => this.#syncCanvasDimensions());
+    this._cssViewportWidth = 0;
+    this._cssViewportHeight = 0;
+    this._devicePixelRatio = 1;
+
+    this.#syncCanvasSize();
+    requestAnimationFrame(() => this.#syncCanvasSize());
+    window.addEventListener('resize', () => this.#syncCanvasSize());
+  }
+
+  draw(graph) {
+    this.#syncCanvasSize();
+    const context = this.context;
+    const canvasEl = this.canvas;
+    const cssWidth = this._cssViewportWidth;
+    const cssHeight = this._cssViewportHeight;
+    const devicePixelRatio = this._devicePixelRatio;
+
+    context.setTransform(1, 0, 0, 1, 0, 0);
+    context.clearRect(0, 0, canvasEl.width, canvasEl.height);
+    context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+
+    context.save();
+    context.textAlign = 'center';
+    context.font = 'serif';
+
+    // Mapeia coordenadas dos nodos para coordenadas dentro dos limites do canvas
+    if (graph.nodes.length > 0) {
+      let graphBoundsMinX = Infinity;
+      let graphBoundsMinY = Infinity;
+      let graphBoundsMaxX = -Infinity;
+      let graphBoundsMaxY = -Infinity;
+      for (const node of graph.nodes) {
+        graphBoundsMinX = Math.min(graphBoundsMinX, node.x);
+        graphBoundsMinY = Math.min(graphBoundsMinY, node.y);
+        graphBoundsMaxX = Math.max(graphBoundsMaxX, node.x);
+        graphBoundsMaxY = Math.max(graphBoundsMaxY, node.y);
+      }
+      const graphWorldWidth = Math.max(graphBoundsMaxX - graphBoundsMinX, 1e-6);
+      const graphWorldHeight = Math.max(graphBoundsMaxY - graphBoundsMinY,
+          1e-6);
+      const drawableInnerWidth = Math.max(1,
+          cssWidth - 2 * GRAPH_VIEW_PADDING_PX);
+      const drawableInnerHeight = Math.max(1,
+          cssHeight - 2 * GRAPH_VIEW_PADDING_PX);
+      const scaleGraphUnitsToCssPx = Math.min(
+          drawableInnerWidth / graphWorldWidth,
+          drawableInnerHeight / graphWorldHeight);
+      const cssOffsetX = GRAPH_VIEW_PADDING_PX +
+          (drawableInnerWidth - graphWorldWidth * scaleGraphUnitsToCssPx) / 2
+          - graphBoundsMinX * scaleGraphUnitsToCssPx;
+      const cssOffsetY = GRAPH_VIEW_PADDING_PX +
+          (drawableInnerHeight - graphWorldHeight * scaleGraphUnitsToCssPx) / 2
+          - graphBoundsMinY * scaleGraphUnitsToCssPx;
+
+      context.setTransform(devicePixelRatio * scaleGraphUnitsToCssPx, 0, 0,
+          devicePixelRatio * scaleGraphUnitsToCssPx,
+          devicePixelRatio * cssOffsetX, devicePixelRatio * cssOffsetY);
     }
 
-    draw(graph) {
-        this._lastGraph = graph;
-        this.#syncCanvasDimensions();
+    graph.edges.forEach((edge) => {
+      const fromNode = graph.getNode(edge.from);
+      const toNode = graph.getNode(edge.to);
+      if (!fromNode || !toNode) return;
 
-        const {ctx, canvas} = this;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      context.beginPath();
+      context.moveTo(fromNode.x, fromNode.y);
+      context.lineTo(toNode.x, toNode.y);
+      context.strokeStyle = edge.color ?? 'black';
+      context.stroke();
 
-        ctx.save();
-        ctx.textAlign = 'center';
-        ctx.font = "12px serif";
-        graph.edges.forEach(edge => {
-            const fromNode = graph.getNode(edge.from);
-            const toNode = graph.getNode(edge.to);
+      const midX = (fromNode.x + toNode.x) / 2;
+      const midY = (fromNode.y + toNode.y) / 2;
+      const edgeVectorX = toNode.x - fromNode.x;
+      const edgeVectorY = toNode.y - fromNode.y;
+      const edgeLength = Math.hypot(edgeVectorX, edgeVectorY) || 1;
 
-            ctx.beginPath();
-            ctx.moveTo(fromNode.x, fromNode.y);
-            ctx.lineTo(toNode.x, toNode.y);
-            ctx.stroke();
+      const normalX = -edgeVectorY / edgeLength;
+      const normalY = edgeVectorX / edgeLength;
+      const labelOffset = 10;
 
-            const dist = Math.hypot(toNode.x - fromNode.x, toNode.y - fromNode.y);
-            const label = dist.toFixed(0);
-            const midX = (fromNode.x + toNode.x) / 2;
-            const midY = (fromNode.y + toNode.y) / 2;
+      context.textAlign = 'center';
+      context.textBaseline = 'middle';
+      context.fillStyle = 'black';
+      context.fillText(edge.cost, midX + normalX * labelOffset,
+          midY + normalY * labelOffset);
+    });
 
-            ctx.fillStyle = 'black';
-            ctx.fillText(label, midX + 25, midY);
-        })
+    graph.nodes.forEach((node) => {
+      context.beginPath();
+      context.arc(node.x, node.y, 15, 0, Math.PI * 2);
+      context.fillStyle = node.color ?? '#3498db';
+      context.fill();
+      context.stroke();
 
-        graph.nodes.forEach(node => {
-            ctx.beginPath();
-            ctx.arc(node.x, node.y, 15, 0, Math.PI * 2);
-            ctx.fillStyle = "#3498db";
-            ctx.fill();
-            ctx.stroke();
+      context.fillStyle = 'black';
+      context.fillText(node.name, node.x, node.y, 28);
+    });
 
-            ctx.fillStyle = 'black';
-            ctx.fillText(node.name, node.x, node.y);
-            ctx.fillText(`${node.x}, ${node.y}`, node.x + 20,node.y - 20);
-        });
+    context.restore();
+  }
 
-        ctx.restore();
+  #syncCanvasSize() {
+    const canvasEl = this.canvas;
+    const container = canvasEl.parentElement;
+    const cssViewportWidth = container
+        ? container.clientWidth
+        : window.innerWidth;
+    const cssViewportHeight = container
+        ? container.clientHeight
+        : window.innerHeight;
+    const devicePixelRatio = window.devicePixelRatio || 1;
+    const backingStoreWidth = Math.max(1,
+        Math.floor(cssViewportWidth * devicePixelRatio));
+    const backingStoreHeight = Math.max(1,
+        Math.floor(cssViewportHeight * devicePixelRatio));
+
+    if (canvasEl.width !== backingStoreWidth || canvasEl.height !==
+        backingStoreHeight) {
+      canvasEl.width = backingStoreWidth;
+      canvasEl.height = backingStoreHeight;
     }
-
-    /**
-     * Sets backing-store size and CSS size so bitmap coordinates match DOM hit-testing while scrolling.
-     */
-    #syncCanvasDimensions() {
-        const graph = this._lastGraph;
-        const parent = this.canvas.parentElement;
-        let w = MIN_WORKSPACE_W;
-        let h = MIN_WORKSPACE_H;
-
-        if (parent) {
-            w = Math.max(w, parent.clientWidth);
-            h = Math.max(h, parent.clientHeight);
-        }
-
-        const halfNode = 30;
-        const pad = NODE_PADDING;
-
-        if (graph && graph.nodes.length > 0) {
-            for (const node of graph.nodes) {
-                w = Math.max(w, node.x + halfNode + pad);
-                h = Math.max(h, node.y + halfNode + pad);
-            }
-        }
-
-        w = Math.ceil(w);
-        h = Math.ceil(h);
-
-        if (this.canvas.width !== w || this.canvas.height !== h) {
-            this.canvas.width = w;
-            this.canvas.height = h;
-        }
-
-        this.canvas.style.width = `${w}px`;
-        this.canvas.style.height = `${h}px`;
-    }
+    this._cssViewportWidth = cssViewportWidth;
+    this._cssViewportHeight = cssViewportHeight;
+    this._devicePixelRatio = devicePixelRatio;
+  }
 }

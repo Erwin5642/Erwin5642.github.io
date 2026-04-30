@@ -1,45 +1,36 @@
 export class Graph {
-    constructor() {
-        this._adj = new Map();
-        this.nodes = [];
-        this.edges = [];
+  constructor() {
+    this._adj = new Map();
+    this.edges = [];
+  }
+
+  addNode(name, x, y) {
+    if (!this._adj.has(name)) {
+      this._adj.set(name, {name, x, y, color: '#3498db', neighbors: new Set()});
     }
+    return this;
+  }
 
-    addNode(name, x, y) {
-        if (!this._adj.has(name)) {
-            this._adj.set(name, { x, y, neighbors: new Set() });
-            this.nodes.push({ name, x, y });
-        }
-        return this;
-    }
+  addEdge(from, to, cost) {
+    if (!this._adj.has(from)) throw new Error(`Node not found: ${from}`);
+    if (!this._adj.has(to)) throw new Error(`Node not found: ${to}`);
+    if (from === to) return this;
+    if (this.hasEdge(from, to)) return this;
+    this._adj.get(from).neighbors.add(to);
+    this._adj.get(to).neighbors.add(from);
+    this.edges.push({from, to, cost});
+    return this;
+  }
 
-    addEdge(from, to) {
-        if (!this._adj.has(from)) throw new Error(`Node not found: ${from}`);
-        if (!this._adj.has(to)) throw new Error(`Node not found: ${to}`);
-        if (this.hasEdge(from, to)) return this;
-        this._adj.get(from).neighbors.add(to);
-        this.edges.push({ from, to });
-        return this;
-    }
+  getNode(id) { return this._adj.get(id) ?? null; }
 
-    updateNode(name, x, y) {
-        const nodeData = this._adj.get(name);
-        if (!nodeData) return this;
+  get nodes() {
+    return Array.from(this._adj.values());
+  }
 
-        nodeData.x = x;
-        nodeData.y = y;
+  hasNode(id) { return this._adj.has(id); }
 
-        const node = this.nodes.find((item) => item.name === name);
-        if (node) {
-            node.x = x;
-            node.y = y;
-        }
+  hasEdge(from, to) { return this._adj.get(from)?.neighbors.has(to) ?? false; }
 
-        return this;
-    }
-
-    getNode(id) { return this._adj.get(id) ?? null; }
-    hasNode(id) { return this._adj.has(id); }
-    hasEdge(from, to) { return this._adj.get(from)?.neighbors.has(to) ?? false; }
-    neighbors(id) { return this._adj.get(id)?.neighbors ?? new Set(); }
+  neighbors(id) { return this._adj.get(id)?.neighbors ?? new Set(); }
 }

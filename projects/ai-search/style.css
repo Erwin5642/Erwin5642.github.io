@@ -1,23 +1,30 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
 body {
     display: flex;
-    height: 100vh;
-    margin: 0;
+    min-height: 0;
+    min-width: 0;
 }
 
 .canvas-container {
     flex: 1;
     min-width: 0;
     min-height: 0;
-    display: block;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
+    position: relative;
+    overflow: hidden;
 }
 
 .canvas-container canvas {
     display: block;
+    width: 100%;
+    height: 100%;
 }
 
-/* Menu */
 .toolbar {
     width: 250px;
     background-color: #2c3e50;
@@ -25,7 +32,6 @@ body {
     padding: 20px;
 }
 
-/* Painéis */
 .panel {
     margin-bottom: 30px;
 }
@@ -36,7 +42,6 @@ body {
     margin-bottom: 10px;
 }
 
-/* Estilo para o título do grupo de opções */
 optgroup {
     background-color: #2c3e50;
     color: #3498db;
@@ -46,7 +51,6 @@ optgroup {
     font-size: 15px;
 }
 
-/* Garante que as opções dentro do grupo voltem ao estilo normal */
 option {
     background-color: #34495e;
     color: white;
@@ -56,14 +60,12 @@ option {
     padding: 5px;
 }
 
-/* Flexbox reutilizável para qualquer grupo de botões */
 .btn-group {
     display: flex;
-    flex-direction: column; /* Coloca um botão embaixo do outro */
+    flex-direction: column;
     gap: 8px;
 }
 
-/* Estilo Base dos botões */
 .btn {
     padding: 10px;
     border: none;
@@ -71,19 +73,6 @@ option {
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.18s ease;
-}
-
-/* Estilos de Cor Específicos */
-.btn-tool { background: #ecf0f1; color: #333; }
-.btn-tool.active { background: #3498db; color: white; } /* Ferramenta selecionada */
-
-/* Hover escurece dentro do mesmo tom de cada botão */
-.btn-tool:not(.active):hover {
-    background-color: #d5dde0;
-}
-
-.btn-tool.active:hover {
-    background-color: #2980b9;
 }
 
 .btn-success { background: #2ecc71; color: white; }
