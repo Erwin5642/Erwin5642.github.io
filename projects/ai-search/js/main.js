@@ -1,23 +1,25 @@
-import {Renderer} from './Renderer.js';
-import {Graph} from './Graph.js';
-import {SimulationController} from './SimulationController.js';
-import {UIController} from './UIController.js';
-import {seedRomaniaNodes, seedRomaniaRoads} from './romaniaMapData.js';
+import {Renderer} from './render/Renderer.js';
+import {SimulationController} from './simulation/SimulationController.js';
+import {UIController} from './ui/UIController.js';
+import {romaniaBundle} from './problems/romaniaBundle.js';
+import {puzzleBundle} from './problems/puzzleBundle.js';
 
-const graph = new Graph();
-seedRomaniaNodes(graph);
-seedRomaniaRoads(graph);
-
+const bundles = [
+    romaniaBundle,
+    puzzleBundle
+];
 const renderer = new Renderer('graphCanvas');
-const simulation = new SimulationController(graph);
-const ui = new UIController(simulation);
+const simulation = new SimulationController();
+const ui = new UIController(simulation, renderer, bundles);
 ui.bind();
 
 function loop() {
-  simulation.tick(performance.now());
-  renderer.draw(graph);
+  ui.sync();
+  const step = simulation.tick(performance.now());
+  if (step) renderer.renderModel?.update(step);
+  renderer.draw();
+
   requestAnimationFrame(loop);
 }
 
-simulation.resetGraphColors();
 loop();
