@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Visualizador de Buscas</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <aside class="toolbar">
 
-    <section class="pannel">
+    <section class="panel">
+        <label class="panel-title" for="problem-select">Problema:</label>
+        <select id="problem-select" class="form-select"></select>
+    </section>
+
+    <section class="panel">
         <label class="panel-title" for="algo-select">Busca selecionada:</label>
         <select id="algo-select" class="form-select">
             <optgroup label="Não Informadas">
@@ -25,14 +30,14 @@
         </select>
     </section>
 
-    <section class="pannel">
-        <label class="panel-title" for="start-node-select">Nodo inicial:</label>
-        <select id="start-node-select" class="form-select"></select>
+    <section class="panel">
+        <h3 class="panel-title">Estado inicial</h3>
+        <div id="initial-input-container"></div>
     </section>
 
-    <section class="pannel">
-        <label class="panel-title" for="end-node-select">Nodo final:</label>
-        <select id="end-node-select" class="form-select"></select>
+    <section class="panel">
+        <h3 class="panel-title">Estado final</h3>
+        <div id="end-input-container"></div>
     </section>
 
     <section class="panel">
