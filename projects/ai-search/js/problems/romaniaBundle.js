@@ -39,6 +39,17 @@ export const romaniaProblem = new Problem({
     }
     return Number.POSITIVE_INFINITY;
   },
+  heuristic: function(state) {
+    const currentPosition = ROMANIA_POSITIONS_KM[state];
+    const destinationPosition = ROMANIA_POSITIONS_KM[this.goalState];
+    if (!currentPosition || !destinationPosition) {
+      return 0;
+    }
+    return Math.hypot(
+        currentPosition.xKm - destinationPosition.xKm,
+        currentPosition.yKm - destinationPosition.yKm,
+    );
+  },
 });
 
 function sortedEdgeKey(a, b) {

@@ -16,7 +16,7 @@ ui.bind();
 function loop() {
   ui.sync();
   const step = simulation.tick(performance.now());
-  if (step) renderer.renderModel?.update(step);
+  if (step) renderer.renderModel.update(step);
   renderer.draw();
 
   requestAnimationFrame(loop);

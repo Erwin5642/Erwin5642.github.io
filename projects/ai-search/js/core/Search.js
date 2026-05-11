@@ -1,7 +1,20 @@
-class priorityQueue {
-  constructor(elements = []) {
+class PriorityQueue {
+  /**
+   * @param {(node: { pathCost: number }) => number} evaluationFunction
+   *   Lower values dequeue first (e.g. path cost for UCS, g+h for A*).
+   * @param {Array<{ pathCost: number }>} elements
+   */
+  constructor(evaluationFunction, elements = []) {
+    if (typeof evaluationFunction !== 'function') {
+      throw new TypeError('PriorityQueue requires evaluationFunction as first argument');
+    }
+    this.evaluationFunction = evaluationFunction;
     this.items = [];
     elements.forEach((element) => this.enqueue(element));
+  }
+
+  #score(node) {
+    return this.evaluationFunction(node);
   }
 
   enqueue(element) {
@@ -29,7 +42,7 @@ class priorityQueue {
   #bubbleUp(index) {
     while (index > 0) {
       const parentIndex = Math.floor((index - 1) / 2);
-      if (this.items[parentIndex].pathCost <= this.items[index].pathCost) {
+      if (this.#score(this.items[parentIndex]) <= this.#score(this.items[index])) {
         break;
       }
       [this.items[parentIndex], this.items[index]] = [this.items[index], this.items[parentIndex]];
@@ -44,10 +57,10 @@ class priorityQueue {
       const right = index * 2 + 2;
       let smallest = index;
 
-      if (left < length && this.items[left].pathCost < this.items[smallest].pathCost) {
+      if (left < length && this.#score(this.items[left]) < this.#score(this.items[smallest])) {
         smallest = left;
       }
-      if (right < length && this.items[right].pathCost < this.items[smallest].pathCost) {
+      if (right < length && this.#score(this.items[right]) < this.#score(this.items[smallest])) {
         smallest = right;
       }
       if (smallest === index) {
@@ -106,7 +119,9 @@ export function search(problem, method) {
     case 'dijkstra':
       return uniformCost(problem);
     case 'astar':
+      return aStar(problem);
     case 'greedy':
+      return greedy(problem);
     default:
       return undefined;
   }
@@ -114,7 +129,7 @@ export function search(problem, method) {
 
 function breadthFirst(problem) {
   const initialNode = createSearchNode(problem.initialState);
-  if (problem.isGoal(initialNode.state)) {
+  if (problem.isGoal(problem.initialState)) {
     return rebuildSolution(initialNode);
   }
 
@@ -127,16 +142,14 @@ function breadthFirst(problem) {
     for (const child of expand(problem, node)) {
       const s = child.state;
       const key = stateKey(s);
-      if (reached.has(key)) {
-        continue;
-      }
-      reached.add(key);
-
       if (problem.isGoal(s)) {
         return rebuildSolution(child);
       }
 
-      frontier.push(child);
+      if (!reached.has(key)) {
+        reached.add(key);
+        frontier.push(child);
+      }
     }
   }
 
@@ -145,45 +158,44 @@ function breadthFirst(problem) {
 
 function depthFirst(problem) {
   const initialNode = createSearchNode(problem.initialState);
-  if (problem.isGoal(initialNode.state)) {
-    return rebuildSolution(initialNode);
-  }
-
   const frontier = [initialNode];
-  const reached = new Set([stateKey(problem.initialState)]);
+  const explored = new Set();
 
   while (frontier.length > 0) {
     const node = frontier.pop();
+    const key = stateKey(node.state);
 
-    for (const child of expand(problem, node)) {
-      const s = child.state;
-      const key = stateKey(s);
-      if (reached.has(key)) {
-        continue;
+    if (problem.isGoal(node.state)) {
+      return rebuildSolution(node);
+    }
+
+    if (!explored.has(key)) {
+      explored.add(key);
+
+      for (const child of expand(problem, node)) {
+        const childKey = stateKey(child.state);
+        if (!explored.has(childKey)) {
+          frontier.push(child);
+        }
       }
-      reached.add(key);
-
-      if (problem.isGoal(s)) {
-        return rebuildSolution(child);
-      }
-
-      frontier.push(child);
     }
   }
-
   return [];
 }
 
-function uniformCost(problem) {
+function bestCostFirst(problem, evaluationFunction) {
   const initialNode = createSearchNode(problem.initialState);
-  const frontier = new priorityQueue([initialNode]);
-  const bestCost = new Map([[stateKey(problem.initialState), 0]]);
+  const frontier = new PriorityQueue(evaluationFunction, [initialNode]);
+  const reached = new Map();
+
+  const initialKey = stateKey(problem.initialState);
+  reached.set(initialKey, initialNode);
 
   while (!frontier.isEmpty()) {
     const node = frontier.dequeue();
-    const nodeKey = stateKey(node.state);
-    const knownNodeCost = bestCost.get(nodeKey);
-    if (knownNodeCost != null && node.pathCost > knownNodeCost) {
+    const key = stateKey(node.state);
+
+    if (evaluationFunction(node) > evaluationFunction(reached.get(key))) {
       continue;
     }
 
@@ -192,14 +204,29 @@ function uniformCost(problem) {
     }
 
     for (const child of expand(problem, node)) {
-      const key = stateKey(child.state);
-      const knownCost = bestCost.get(key);
-      if (knownCost == null || child.pathCost < knownCost) {
-        bestCost.set(key, child.pathCost);
+      const s = child.state;
+      const sKey = stateKey(s);
+
+      const bestReached = reached.get(sKey);
+
+      if (!bestReached || evaluationFunction(child) < evaluationFunction(bestReached)) {
+        reached.set(sKey, child);
         frontier.enqueue(child);
       }
     }
   }
 
   return [];
+}
+
+function uniformCost(problem) {
+  return bestCostFirst(problem, (node) => node.pathCost);
+}
+
+function greedy(problem) {
+  return bestCostFirst(problem, (node) => problem.heuristic(node.state));
+}
+
+function aStar(problem) {
+  return bestCostFirst(problem, (node) => node.pathCost + problem.heuristic(node.state));
 }

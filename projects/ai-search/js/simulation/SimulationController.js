@@ -31,9 +31,11 @@ export class SimulationController {
     if (!this.problem) return;
 
     const result = search(this.problem, this.selectedAlgorithmKey);
-    if (!result) {
+    if (!result || result.length === 0) {
       alert("Nenhuma solução encontrada!\n");
     }
+
+    console.log(result);
 
     this.activeRun = result;
     this.stepCounter = 0;

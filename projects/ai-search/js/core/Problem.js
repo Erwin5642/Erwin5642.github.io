@@ -1,11 +1,12 @@
 import {assertHandler} from '../utility/assert.js';
 
 export class Problem {
-  constructor({initialState, goalState, isGoal, actions, result, actionCost}) {
+  constructor({initialState, goalState, isGoal, actions, result, actionCost, heuristic}) {
     assertHandler('isGoal', isGoal);
     assertHandler('actions', isGoal);
     assertHandler('result', isGoal);
     assertHandler('actionCost', isGoal);
+    assertHandler('heuristic', heuristic);
 
     this.initialState = initialState;
     this.goalState = goalState;
@@ -13,6 +14,7 @@ export class Problem {
     this._actions = actions;
     this._result = result;
     this._actionCost = actionCost;
+    this._heuristic = heuristic;
   }
 
   setInitialState(state) {
@@ -37,5 +39,9 @@ export class Problem {
 
   actionCost(state, action, resultState) {
     return this._actionCost(state, action, resultState);
+  }
+
+  heuristic(state) {
+    return this._heuristic(state);
   }
 }

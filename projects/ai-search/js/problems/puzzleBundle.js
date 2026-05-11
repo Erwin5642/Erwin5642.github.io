@@ -58,6 +58,15 @@ export const puzzleProblem = new Problem({
   },
   actionCost: (state, action, resultState) => {
     return 1;
+  },
+  heuristic: function(state) {
+    const flatCurrentState = state.flat();
+    const flatGoalState = this.goalState.flat();
+    return flatCurrentState.reduce((count, tile, index) => {
+      const isNotEmpty = tile !== 0;
+      const isMisplaced = tile !== flatGoalState[index];
+      return (isNotEmpty && isMisplaced) ? count + 1 : count;
+    }, 0);
   }
 });
 

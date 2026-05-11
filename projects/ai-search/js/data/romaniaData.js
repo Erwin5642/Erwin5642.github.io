@@ -1,6 +1,6 @@
 export const DEFAULT_ROMANIA_SOURCE = 'Arad';
 
-export const DEFAULT_ROMANIA_DESTINATION = 'Bucharest';
+export const DEFAULT_ROMANIA_DESTINATION = 'Neamt';
 
 export const ROMANIA_CITIES = Object.freeze([
   'Arad',
