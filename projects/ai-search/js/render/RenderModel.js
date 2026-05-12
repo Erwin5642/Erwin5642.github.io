@@ -17,9 +17,15 @@ export class RenderModel {
     this.currentState = null;
     this.currentProblem = null;
     this.currentStep = 0;
+    this.isComputing = false;
+  }
+
+  setComputing(value) {
+    this.isComputing = Boolean(value);
   }
 
   reset(problem) {
+    this.isComputing = false;
     this.currentStep = 0;
     this.currentProblem = problem ?? null;
     this.currentState = problem?.initialState ?? null;
@@ -36,7 +42,12 @@ export class RenderModel {
   draw(ctx, viewport) {
     const {widthCss} = viewport;
     ctx.font = '13px system-ui, sans-serif';
-    ctx.strokeText(`Passo: ${this.currentStep}`, widthCss - 100, 50);
+    const stepLabel = this.isComputing
+        ? 'Calculando...'
+        : `Passo: ${this.currentStep}`;
+    ctx.textAlign = 'right';
+    ctx.strokeText(stepLabel, widthCss - 16, 50);
+    ctx.textAlign = 'start';
     ctx.save();
     this._drawHandler(ctx, viewport, this);
     ctx.restore();

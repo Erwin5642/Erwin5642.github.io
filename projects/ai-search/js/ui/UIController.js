@@ -1,3 +1,5 @@
+import {ROMANIA_CITIES} from '../data/romaniaData.js';
+
 export class UIController {
 
   constructor(simulation, renderer, bundles) {
@@ -16,6 +18,9 @@ export class UIController {
     this.endInputContainer = document.getElementById('end-input-container');
 
     this.currentBundle = null;
+    this._puzzleEditors = null;
+    this._romaniaCityOrder = [...ROMANIA_CITIES].sort((a, b) =>
+        a.localeCompare(b, 'pt-BR', {sensitivity: 'base'}));
   }
 
   bind() {
@@ -51,9 +56,15 @@ export class UIController {
       this.currentBundle.renderModel.reset(this.currentBundle.problem);
     });
 
-    this.startButton.addEventListener('click', () => {
-      this.simulation.start();
-      this.currentBundle.renderModel.reset(this.currentBundle.problem);
+    this.startButton.addEventListener('click', async () => {
+      const bundle = this.currentBundle;
+      bundle.renderModel.reset(bundle.problem);
+      bundle.renderModel.setComputing(true);
+      try {
+        await this.simulation.start();
+      } finally {
+        bundle.renderModel.setComputing(false);
+      }
     });
     this.toggleButton.addEventListener('click', () => {
       this.simulation.toggleSimulation();
@@ -84,9 +95,214 @@ export class UIController {
   #applySelectedBundle(index) {
     const bundle = this.bundles[index];
     this.currentBundle = bundle;
-    this.simulation.setProblem(bundle.problem);
+    this.simulation.setProblem(bundle.problem, bundle.id);
     this.renderer.setRenderModel(bundle.renderModel);
     bundle.renderModel.reset(bundle.problem);
+    this.#syncStateInputPanels();
+  }
+
+  #syncStateInputPanels() {
+    this._puzzleEditors = null;
+    this.initialInputContainer.replaceChildren();
+    this.endInputContainer.replaceChildren();
+    if (this.currentBundle?.id === 'romania') {
+      this.#mountRomaniaStateSelectors();
+    } else if (this.currentBundle?.id === 'puzzle') {
+      this.#mountPuzzleBoardEditors();
+    }
+  }
+
+  #clonePuzzleBoard(board) {
+    return board.map((row) => [...row]);
+  }
+
+  #validateEightPuzzle(board) {
+    if (!board || board.length !== 3) {
+      return 'Tabuleiro incompleto.';
+    }
+    const flat = [];
+    for (let r = 0; r < 3; r++) {
+      if (!board[r] || board[r].length !== 3) {
+        return 'Tabuleiro incompleto.';
+      }
+      for (let c = 0; c < 3; c++) {
+        flat.push(board[r][c]);
+      }
+    }
+    let empty = 0;
+    const seen = new Set();
+    for (const v of flat) {
+      if (v === 'x') {
+        empty++;
+        continue;
+      }
+      if (typeof v === 'number' && Number.isInteger(v) && v >= 1 && v <= 8) {
+        if (seen.has(v)) {
+          return 'Cada peça 1–8 só pode aparecer uma vez.';
+        }
+        seen.add(v);
+        continue;
+      }
+      return 'Use números 1–8 ou espaço vazio em cada célula.';
+    }
+    if (empty !== 1) {
+      return 'Deve haver exatamente um espaço vazio.';
+    }
+    if (seen.size !== 8) {
+      return 'Coloque todas as peças de 1 a 8.';
+    }
+    return '';
+  }
+
+  #readPuzzleSelects(selects) {
+    return selects.map((row) =>
+        row.map((sel) => {
+          const raw = sel.value;
+          return raw === 'x' ? 'x' : Number(raw);
+        }));
+  }
+
+  #fillPuzzleTileSelect(sel, value) {
+    sel.replaceChildren();
+    const emptyOpt = document.createElement('option');
+    emptyOpt.value = 'x';
+    emptyOpt.textContent = '—';
+    sel.appendChild(emptyOpt);
+    for (let n = 1; n <= 8; n++) {
+      const opt = document.createElement('option');
+      opt.value = String(n);
+      opt.textContent = String(n);
+      sel.appendChild(opt);
+    }
+    sel.value = value === 'x' ? 'x' : String(value);
+  }
+
+  #createPuzzleBoardSection(board, idPrefix, ariaLabel) {
+    const section = document.createElement('div');
+    section.className = 'puzzle-board-section';
+
+    const hint = document.createElement('p');
+    hint.className = 'puzzle-board-hint';
+    hint.textContent = 'Números 1–8, cada um uma vez; um espaço vazio (—).';
+    section.appendChild(hint);
+
+    const grid = document.createElement('div');
+    grid.className = 'puzzle-board-grid';
+    grid.setAttribute('role', 'group');
+    grid.setAttribute('aria-label', ariaLabel);
+
+    const selects = [[], [], []];
+    for (let r = 0; r < 3; r++) {
+      for (let c = 0; c < 3; c++) {
+        const sel = document.createElement('select');
+        sel.className = 'form-select';
+        sel.id = `${idPrefix}-${r}-${c}`;
+        this.#fillPuzzleTileSelect(sel, board[r][c]);
+        selects[r][c] = sel;
+        grid.appendChild(sel);
+      }
+    }
+    section.appendChild(grid);
+
+    const errorEl = document.createElement('p');
+    errorEl.className = 'puzzle-board-error';
+    errorEl.setAttribute('aria-live', 'polite');
+    section.appendChild(errorEl);
+
+    return {section, selects, errorEl};
+  }
+
+  #mountPuzzleBoardEditors() {
+    const problem = this.currentBundle.problem;
+    const initialBoard = this.#clonePuzzleBoard(problem.initialState);
+    const goalBoard = this.#clonePuzzleBoard(problem.goalState);
+
+    const initial = this.#createPuzzleBoardSection(
+        initialBoard,
+        'puzzle-init',
+        'Tabuleiro inicial 3×3',
+    );
+    const goal = this.#createPuzzleBoardSection(
+        goalBoard,
+        'puzzle-goal',
+        'Tabuleiro objetivo 3×3',
+    );
+
+    const applyPuzzleBoards = () => {
+      const iBoard = this.#readPuzzleSelects(initial.selects);
+      const gBoard = this.#readPuzzleSelects(goal.selects);
+      const errI = this.#validateEightPuzzle(iBoard);
+      const errG = this.#validateEightPuzzle(gBoard);
+      initial.errorEl.textContent = errI;
+      goal.errorEl.textContent = errG;
+      if (errI || errG) {
+        return;
+      }
+      problem.setInitialState(this.#clonePuzzleBoard(iBoard));
+      problem.setGoalState(this.#clonePuzzleBoard(gBoard));
+      this.simulation.reset();
+      this.currentBundle.renderModel.reset(problem);
+    };
+
+    for (let r = 0; r < 3; r++) {
+      for (let c = 0; c < 3; c++) {
+        initial.selects[r][c].addEventListener('change', applyPuzzleBoards);
+        goal.selects[r][c].addEventListener('change', applyPuzzleBoards);
+      }
+    }
+
+    this.initialInputContainer.appendChild(initial.section);
+    this.endInputContainer.appendChild(goal.section);
+    this._puzzleEditors = {initial, goal};
+  }
+
+  #puzzleBoardsValidFromEditors() {
+    if (!this._puzzleEditors) {
+      return true;
+    }
+    const iBoard = this.#readPuzzleSelects(this._puzzleEditors.initial.selects);
+    const gBoard = this.#readPuzzleSelects(this._puzzleEditors.goal.selects);
+    return !this.#validateEightPuzzle(iBoard) && !this.#validateEightPuzzle(gBoard);
+  }
+
+  #mountRomaniaStateSelectors() {
+    const problem = this.currentBundle.problem;
+    const cities = this._romaniaCityOrder;
+
+    const mkSelect = (id, value) => {
+      const sel = document.createElement('select');
+      sel.id = id;
+      sel.className = 'form-select';
+      sel.setAttribute('aria-label', id === 'romania-initial-city'
+          ? 'Cidade inicial'
+          : 'Cidade objetivo');
+      for (const city of cities) {
+        const opt = document.createElement('option');
+        opt.value = city;
+        opt.textContent = city;
+        if (city === value) {
+          opt.selected = true;
+        }
+        sel.appendChild(opt);
+      }
+      return sel;
+    };
+
+    const initialSel = mkSelect('romania-initial-city', problem.initialState);
+    const goalSel = mkSelect('romania-goal-city', problem.goalState);
+
+    const applyRomaniaStates = () => {
+      problem.setInitialState(initialSel.value);
+      problem.setGoalState(goalSel.value);
+      this.simulation.reset();
+      this.currentBundle.renderModel.reset(problem);
+    };
+
+    initialSel.addEventListener('change', applyRomaniaStates);
+    goalSel.addEventListener('change', applyRomaniaStates);
+
+    this.initialInputContainer.appendChild(initialSel);
+    this.endInputContainer.appendChild(goalSel);
   }
 
   sync() {
@@ -97,9 +313,18 @@ export class UIController {
     this.selectedAlgorithm = algorithmKey;
 
     const hasRun = !!this.simulation.activeRun;
-    this.startButton.style.display = hasRun ? 'none' : '';
+    const busy = this.simulation.isComputing;
+    const showStart = !hasRun && !busy;
+    this.startButton.style.display = showStart ? '' : 'none';
+    if (showStart) {
+      const configOk = this.currentBundle?.id !== 'puzzle' ||
+          this.#puzzleBoardsValidFromEditors();
+      this.startButton.disabled = !configOk;
+    } else {
+      this.startButton.disabled = false;
+    }
     this.toggleButton.style.display = hasRun ? '' : 'none';
-    this.resetButton.style.display = hasRun ? '' : 'none';
+    this.resetButton.style.display = (hasRun || busy) ? '' : 'none';
     this.toggleButton.textContent = this.simulation.isRunning ? 'Pausar' : 'Resumir';
   }
 }

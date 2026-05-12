@@ -1,3 +1,10 @@
+const searchStats = {
+  nodesExpanded: 0,
+  reset() {
+    this.nodesExpanded = 0;
+  }
+};
+
 class PriorityQueue {
   constructor(evaluationFunction, elements = []) {
     if (typeof evaluationFunction !== 'function') {
@@ -81,6 +88,8 @@ function rebuildSolution(goalNode) {
 }
 
 function expand(problem, node) {
+  searchStats.nodesExpanded++;
+
   const s = node.state;
   const expansion = [];
   problem.actions(s).forEach((action) => {
@@ -135,7 +144,9 @@ function depthFirstSearch(problem) {
     if (!explored.has(key)) {
       explored.add(key);
       for (const child of expand(problem, node)) {
-        if (!explored.has(stateKey(child.state))) frontier.push(child);
+        if (!explored.has(stateKey(child.state))) {
+          frontier.push(child);
+        }
       }
     }
   }
@@ -267,39 +278,36 @@ function iterativeDeepeningAStarSearch(problem) {
 }
 
 export function search(problem, method) {
-  let result;
+  searchStats.reset();
 
+  let result;
   const start = performance.now();
+
   switch (method) {
-    case 'bfs':
-      result = breadthFirstSearch(problem);
-      break;
-    case 'dfs':
-      result = depthFirstSearch(problem);
-      break;
-    case 'dijkstra':
-      result = uniformCostSearch(problem);
-      break;
-    case 'ids':
-      result = iterativeDeepeningSearch(problem);
-      break;
-    case 'astar':
-      result = aStarSearch(problem);
-      break;
-    case 'greedy':
-      result = greedySearch(problem);
-      break;
-    case 'idastar':
-      result = iterativeDeepeningAStarSearch(problem);
-      break;
-    default:
-      return null;
+    case 'bfs': result = breadthFirstSearch(problem); break;
+    case 'dfs': result = depthFirstSearch(problem); break;
+    case 'dijkstra': result = uniformCostSearch(problem); break;
+    case 'ids': result = iterativeDeepeningSearch(problem); break;
+    case 'astar': result = aStarSearch(problem); break;
+    case 'greedy': result = greedySearch(problem); break;
+    case 'idastar': result = iterativeDeepeningAStarSearch(problem); break;
+    default: return null;
   }
 
   const end = performance.now();
   const durationSeconds = ((end - start) / 1000).toFixed(4);
 
-  console.log(`[${method.toUpperCase()}] Tempo de execução: ${durationSeconds} s`);
+  const solution = rebuildSolution(result);
+  const pathCost = result ? result.pathCost : "N/A";
+  const steps = solution ? solution.length - 1 : 0;
 
-  return rebuildSolution(result);
+  console.log(`\n--- [${method.toUpperCase()}] REPORT ---`);
+  console.table({
+    "Time (s)": durationSeconds,
+    "Nodes Expanded": searchStats.nodesExpanded,
+    "Path Cost": pathCost,
+    "Path Length": steps
+  });
+
+  return solution;
 }

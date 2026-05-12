@@ -1,74 +1,11 @@
-import {Problem} from '../core/Problem.js';
 import {DEFAULT_INITIAL_CONFIGURATION, DEFAULT_GOAL_CONFIGURATION} from '../data/puzzleData.js';
 import {RenderModel} from '../render/RenderModel.js';
+import {createPuzzleProblem} from './problemFactories.js';
 
-const findX = (state) => {
-  for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 3; j++) {
-      if (state[i][j] === 'x') return {row: i, col: j};
-    }
-  }
-  return {row: -1, col: -1};
-};
-
-export const puzzleProblem = new Problem({
-  initialState: DEFAULT_INITIAL_CONFIGURATION,
-  goalState: DEFAULT_GOAL_CONFIGURATION,
-  isGoal: function(state) {
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        if (this.goalState[i][j] !== state[i][j]) return false;
-      }
-    }
-    return true;
-  },
-  actions: (state) => {
-    const {row, col} = findX(state);
-    const res = [];
-    if (col > 0) res.push('left');
-    if (col < 2) res.push('right');
-    if (row > 0) res.push('up');
-    if (row < 2) res.push('down');
-    return res;
-  },
-  result: (state, action) => {
-    const {row: xRow, col: xCol} = findX(state);
-
-    let newRow = xRow;
-    let newCol = xCol;
-    switch (action) {
-      case 'left':
-        newCol = xCol - 1;
-        break;
-      case 'right':
-        newCol = xCol + 1;
-        break;
-      case 'up':
-        newRow = xRow - 1;
-        break;
-      case 'down':
-        newRow = xRow + 1;
-        break;
-    }
-
-    const newState = state.map(r => [...r]);
-    newState[xRow][xCol] = newState[newRow][newCol];
-    newState[newRow][newCol] = 'x';
-    return newState;
-  },
-  actionCost: (state, action, resultState) => {
-    return 1;
-  },
-  heuristic: function(state) {
-    const flatCurrentState = state.flat();
-    const flatGoalState = this.goalState.flat();
-    return flatCurrentState.reduce((count, tile, index) => {
-      const isNotEmpty = tile !== 0;
-      const isMisplaced = tile !== flatGoalState[index];
-      return (isNotEmpty && isMisplaced) ? count + 1 : count;
-    }, 0);
-  }
-});
+export const puzzleProblem = createPuzzleProblem(
+    DEFAULT_INITIAL_CONFIGURATION,
+    DEFAULT_GOAL_CONFIGURATION,
+);
 
 function resetPuzzle(problem, model) {
   model.board = problem.initialState;
@@ -164,9 +101,10 @@ function updatePuzzle(newState, previousState, model) {
 
 export const puzzleRenderModel = new RenderModel(resetPuzzle, updatePuzzle, drawPuzzle);
 
-export const puzzleBundle = {
+export const puzzleBundle = Object.freeze({
+  id: 'puzzle',
   name: 'Puzzle',
   problem: puzzleProblem,
   renderModel: puzzleRenderModel,
-}
+});
 

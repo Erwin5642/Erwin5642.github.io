@@ -1,4 +1,3 @@
-import {Problem} from '../core/Problem.js';
 import {
   DEFAULT_ROMANIA_SOURCE,
   DEFAULT_ROMANIA_DESTINATION,
@@ -6,51 +5,12 @@ import {
   ROMANIA_POSITIONS_KM,
 } from '../data/romaniaData.js';
 import {RenderModel} from '../render/RenderModel.js';
+import {createRomaniaProblem} from './problemFactories.js';
 
-const ROMANIA_GRAPH = Object.freeze(ROMANIA_ROADS_KM.reduce((graph, [a, b, km]) => {
-  if (!graph[a]) {
-    graph[a] = [];
-  }
-  if (!graph[b]) {
-    graph[b] = [];
-  }
-  graph[a].push(Object.freeze({to: b, cost: km}));
-  graph[b].push(Object.freeze({to: a, cost: km}));
-  return graph;
-}, {}));
-
-export const romaniaProblem = new Problem({
-  initialState: DEFAULT_ROMANIA_SOURCE,
-  goalState: DEFAULT_ROMANIA_DESTINATION,
-  isGoal: function(state) {
-    return state === this.goalState;
-  },
-  actions: (state) => (ROMANIA_GRAPH[state] ?? []).map((edge) => edge.to),
-  result: (state, action) => {
-    const neighbors = ROMANIA_GRAPH[state] ?? [];
-    const edge = neighbors.find((candidate) => candidate.to === action);
-    return edge ? edge.to : state;
-  },
-  actionCost: (state, action, resultState) => {
-    const neighbors = ROMANIA_GRAPH[state] ?? [];
-    const edge = neighbors.find((candidate) => candidate.to === action);
-    if (edge && edge.to === resultState) {
-      return edge.cost;
-    }
-    return Number.POSITIVE_INFINITY;
-  },
-  heuristic: function(state) {
-    const currentPosition = ROMANIA_POSITIONS_KM[state];
-    const destinationPosition = ROMANIA_POSITIONS_KM[this.goalState];
-    if (!currentPosition || !destinationPosition) {
-      return 0;
-    }
-    return Math.hypot(
-        currentPosition.xKm - destinationPosition.xKm,
-        currentPosition.yKm - destinationPosition.yKm,
-    );
-  },
-});
+export const romaniaProblem = createRomaniaProblem(
+    DEFAULT_ROMANIA_SOURCE,
+    DEFAULT_ROMANIA_DESTINATION,
+);
 
 function sortedEdgeKey(a, b) {
   return a < b ? `${a}|${b}` : `${b}|${a}`;
@@ -229,6 +189,7 @@ export const romaniaRenderModel = new RenderModel(
 );
 
 export const romaniaBundle = Object.freeze({
+  id: 'romania',
   name: 'Mapa da Romania',
   problem: romaniaProblem,
   renderModel: romaniaRenderModel,
