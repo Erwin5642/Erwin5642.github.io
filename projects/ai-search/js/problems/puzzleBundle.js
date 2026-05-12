@@ -65,7 +65,7 @@ function drawPuzzle(ctx, viewport, model) {
       const y = originY + row * cellSize + gap;
       const w = cellSize - 2 * gap;
       const h = cellSize - 2 * gap;
-      const isEmpty = tile === 'x';
+      const isEmpty = tile === '-';
 
       if (isEmpty) {
         ctx.fillStyle = '#e5e7eb';

@@ -132,7 +132,7 @@ export class UIController {
     let empty = 0;
     const seen = new Set();
     for (const v of flat) {
-      if (v === 'x') {
+      if (v === '-') {
         empty++;
         continue;
       }
@@ -158,14 +158,14 @@ export class UIController {
     return selects.map((row) =>
         row.map((sel) => {
           const raw = sel.value;
-          return raw === 'x' ? 'x' : Number(raw);
+          return raw === '-' ? '-' : Number(raw);
         }));
   }
 
   #fillPuzzleTileSelect(sel, value) {
     sel.replaceChildren();
     const emptyOpt = document.createElement('option');
-    emptyOpt.value = 'x';
+    emptyOpt.value = '-';
     emptyOpt.textContent = '—';
     sel.appendChild(emptyOpt);
     for (let n = 1; n <= 8; n++) {
@@ -174,7 +174,7 @@ export class UIController {
       opt.textContent = String(n);
       sel.appendChild(opt);
     }
-    sel.value = value === 'x' ? 'x' : String(value);
+    sel.value = value === '-' ? '-' : String(value);
   }
 
   #createPuzzleBoardSection(board, idPrefix, ariaLabel) {
