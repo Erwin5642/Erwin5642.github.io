@@ -25,7 +25,79 @@ const findX = (state) => {
   return {row: -1, col: -1};
 };
 
-export function createRomaniaProblem(initialState, goalState) {
+/** @type {Record<string, (state: string, goalState: string) => number>} */
+const romaniaHeuristicImpl = {
+  straight_line(state, goalState) {
+    const currentPosition = ROMANIA_POSITIONS_KM[state];
+    const destinationPosition = ROMANIA_POSITIONS_KM[goalState];
+    if (!currentPosition || !destinationPosition) {
+      return 0;
+    }
+    return Math.hypot(
+        currentPosition.xKm - destinationPosition.xKm,
+        currentPosition.yKm - destinationPosition.yKm,
+    );
+  },
+  zero() {
+    return 0;
+  },
+};
+
+export const ROMANIA_HEURISTIC_OPTIONS = Object.freeze([
+  {id: 'straight_line', label: 'Linha reta no mapa (km)'},
+  {id: 'zero', label: 'Zero (h ≡ 0)'},
+]);
+
+export const ROMANIA_DEFAULT_HEURISTIC = 'straight_line';
+
+/** @type {Record<string, (state: number[][]|string[][], goalState: number[][]|string[][]) => number>} */
+const puzzleHeuristicImpl = {
+  misplaced(state, goalState) {
+    let count = 0;
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        const t = state[i][j];
+        if (t !== '-' && t !== goalState[i][j]) {
+          count++;
+        }
+      }
+    }
+    return count;
+  },
+  manhattan(state, goalState) {
+    const goalPos = new Map();
+    for (let r = 0; r < 3; r++) {
+      for (let c = 0; c < 3; c++) {
+        const t = goalState[r][c];
+        if (t !== '-') {
+          goalPos.set(t, {r, c});
+        }
+      }
+    }
+    let sum = 0;
+    for (let r = 0; r < 3; r++) {
+      for (let c = 0; c < 3; c++) {
+        const t = state[r][c];
+        if (t === '-') continue;
+        const g = goalPos.get(t);
+        if (g) {
+          sum += Math.abs(r - g.r) + Math.abs(c - g.c);
+        }
+      }
+    }
+    return sum;
+  },
+};
+
+export const PUZZLE_HEURISTIC_OPTIONS = Object.freeze([
+  {id: 'misplaced', label: 'Peças fora do lugar'},
+  {id: 'manhattan', label: 'Distância de Manhattan'},
+]);
+
+export const PUZZLE_DEFAULT_HEURISTIC = 'misplaced';
+
+export function createRomaniaProblem(initialState, goalState, heuristicKey = ROMANIA_DEFAULT_HEURISTIC) {
+  const impl = romaniaHeuristicImpl[heuristicKey] ?? romaniaHeuristicImpl[ROMANIA_DEFAULT_HEURISTIC];
   return new Problem({
     initialState,
     goalState,
@@ -47,20 +119,13 @@ export function createRomaniaProblem(initialState, goalState) {
       return Number.POSITIVE_INFINITY;
     },
     heuristic: function(state) {
-      const currentPosition = ROMANIA_POSITIONS_KM[state];
-      const destinationPosition = ROMANIA_POSITIONS_KM[this.goalState];
-      if (!currentPosition || !destinationPosition) {
-        return 0;
-      }
-      return Math.hypot(
-          currentPosition.xKm - destinationPosition.xKm,
-          currentPosition.yKm - destinationPosition.yKm,
-      );
+      return impl(state, this.goalState);
     },
   });
 }
 
-export function createPuzzleProblem(initialState, goalState) {
+export function createPuzzleProblem(initialState, goalState, heuristicKey = PUZZLE_DEFAULT_HEURISTIC) {
+  const impl = puzzleHeuristicImpl[heuristicKey] ?? puzzleHeuristicImpl[PUZZLE_DEFAULT_HEURISTIC];
   return new Problem({
     initialState,
     goalState,
@@ -108,13 +173,7 @@ export function createPuzzleProblem(initialState, goalState) {
     },
     actionCost: () => 1,
     heuristic: function(state) {
-      const flatCurrentState = state.flat();
-      const flatGoalState = this.goalState.flat();
-      return flatCurrentState.reduce((count, tile, index) => {
-        const isNotEmpty = tile !== 0;
-        const isMisplaced = tile !== flatGoalState[index];
-        return (isNotEmpty && isMisplaced) ? count + 1 : count;
-      }, 0);
+      return impl(state, this.goalState);
     },
   });
 }

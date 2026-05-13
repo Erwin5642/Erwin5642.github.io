@@ -1,4 +1,7 @@
 import {ROMANIA_CITIES} from '../data/romaniaData.js';
+import {createPuzzleProblem, createRomaniaProblem} from '../problems/problemFactories.js';
+
+const INFORMED_ALGORITHM_KEYS = new Set(['astar', 'greedy', 'idastar']);
 
 export class UIController {
 
@@ -16,6 +19,8 @@ export class UIController {
     this.stepIntervalLabel = document.getElementById('step-interval-ms');
     this.initialInputContainer = document.getElementById('initial-input-container');
     this.endInputContainer = document.getElementById('end-input-container');
+    this.heuristicPanel = document.getElementById('heuristic-panel');
+    this.heuristicSelect = document.getElementById('heuristic-select');
 
     this.currentBundle = null;
     this._puzzleEditors = null;
@@ -54,7 +59,16 @@ export class UIController {
       this.simulation.reset();
       this.simulation.setAlgorithm(key);
       this.currentBundle.renderModel.reset(this.currentBundle.problem);
+      this.#updateHeuristicPanelVisibility();
     });
+
+    if (this.heuristicSelect) {
+      this.heuristicSelect.addEventListener('change', () => {
+        const heuristicKey = this.heuristicSelect.value;
+        this.simulation.reset();
+        this.#rebuildProblemWithHeuristic(heuristicKey);
+      });
+    }
 
     this.startButton.addEventListener('click', async () => {
       const bundle = this.currentBundle;
@@ -64,6 +78,9 @@ export class UIController {
         await this.simulation.start();
       } finally {
         bundle.renderModel.setComputing(false);
+      }
+      if (!this.simulation.activeRun) {
+        bundle.renderModel.reset(bundle.problem);
       }
     });
     this.toggleButton.addEventListener('click', () => {
@@ -90,15 +107,79 @@ export class UIController {
 
     this.stepIntervalSlider.addEventListener('input', applyStepIntervalFromSlider);
     applyStepIntervalFromSlider();
+    this.#updateHeuristicPanelVisibility();
   }
 
   #applySelectedBundle(index) {
     const bundle = this.bundles[index];
     this.currentBundle = bundle;
+    this.simulation.setHeuristicKey(bundle.activeHeuristicKey);
     this.simulation.setProblem(bundle.problem, bundle.id);
     this.renderer.setRenderModel(bundle.renderModel);
     bundle.renderModel.reset(bundle.problem);
     this.#syncStateInputPanels();
+    this.#fillHeuristicSelect();
+    this.#updateHeuristicPanelVisibility();
+  }
+
+  #fillHeuristicSelect() {
+    if (!this.heuristicSelect) {
+      return;
+    }
+    const bundle = this.currentBundle;
+    this.heuristicSelect.innerHTML = '';
+    for (const {id, label} of bundle?.heuristics ?? []) {
+      const opt = document.createElement('option');
+      opt.value = id;
+      opt.textContent = label;
+      this.heuristicSelect.appendChild(opt);
+    }
+    const key = bundle?.activeHeuristicKey ?? bundle?.defaultHeuristicKey ?? '';
+    if (key && [...this.heuristicSelect.options].some((o) => o.value === key)) {
+      this.heuristicSelect.value = key;
+    }
+  }
+
+  #updateHeuristicPanelVisibility() {
+    if (!this.heuristicPanel) {
+      return;
+    }
+    const informed = INFORMED_ALGORITHM_KEYS.has(this.algorithmSelect.value);
+    const hasList = (this.currentBundle?.heuristics?.length ?? 0) > 0;
+    this.heuristicPanel.hidden = !informed || !hasList;
+  }
+
+  /**
+   * New heuristic ⇒ new Problem from the factory; same initial/goal states.
+   * Remounts state panels so they reference the new instance.
+   */
+  #rebuildProblemWithHeuristic(heuristicKey) {
+    const bundle = this.currentBundle;
+    if (!bundle?.heuristics?.length) {
+      return;
+    }
+    const validIds = new Set(bundle.heuristics.map((h) => h.id));
+    const key = validIds.has(heuristicKey) ? heuristicKey : bundle.defaultHeuristicKey;
+
+    const initialState = structuredClone(bundle.problem.initialState);
+    const goalState = structuredClone(bundle.problem.goalState);
+
+    if (bundle.id === 'romania') {
+      bundle.problem = createRomaniaProblem(initialState, goalState, key);
+    } else if (bundle.id === 'puzzle') {
+      bundle.problem = createPuzzleProblem(initialState, goalState, key);
+    } else {
+      return;
+    }
+
+    bundle.activeHeuristicKey = key;
+    this.simulation.setHeuristicKey(key);
+    this.simulation.setProblem(bundle.problem, bundle.id);
+    this.#syncStateInputPanels();
+    bundle.renderModel.reset(bundle.problem);
+    if (this.heuristicSelect && this.heuristicSelect.value !== key) {
+      this.heuristicSelect.value = key;
+    }
   }
 
   #syncStateInputPanels() {
@@ -311,6 +392,13 @@ export class UIController {
       this.algorithmSelect.value = algorithmKey;
     }
     this.selectedAlgorithm = algorithmKey;
+
+    if (this.heuristicSelect && this.heuristicPanel && !this.heuristicPanel.hidden) {
+      const bundleKey = this.currentBundle?.activeHeuristicKey;
+      if (bundleKey && this.heuristicSelect.value !== bundleKey) {
+        this.heuristicSelect.value = bundleKey;
+      }
+    }
 
     const hasRun = !!this.simulation.activeRun;
     const busy = this.simulation.isComputing;

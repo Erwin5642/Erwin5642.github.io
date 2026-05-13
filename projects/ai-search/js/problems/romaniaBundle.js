@@ -5,7 +5,11 @@ import {
   ROMANIA_POSITIONS_KM,
 } from '../data/romaniaData.js';
 import {RenderModel} from '../render/RenderModel.js';
-import {createRomaniaProblem} from './problemFactories.js';
+import {
+  createRomaniaProblem,
+  ROMANIA_DEFAULT_HEURISTIC,
+  ROMANIA_HEURISTIC_OPTIONS,
+} from './problemFactories.js';
 
 export const romaniaProblem = createRomaniaProblem(
     DEFAULT_ROMANIA_SOURCE,
@@ -188,9 +192,12 @@ export const romaniaRenderModel = new RenderModel(
     drawRomaniaMap,
 );
 
-export const romaniaBundle = Object.freeze({
+export const romaniaBundle = {
   id: 'romania',
   name: 'Mapa da Romania',
   problem: romaniaProblem,
   renderModel: romaniaRenderModel,
-});
+  heuristics: ROMANIA_HEURISTIC_OPTIONS,
+  defaultHeuristicKey: ROMANIA_DEFAULT_HEURISTIC,
+  activeHeuristicKey: ROMANIA_DEFAULT_HEURISTIC,
+};

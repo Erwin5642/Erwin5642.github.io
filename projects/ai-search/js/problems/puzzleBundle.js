@@ -1,6 +1,10 @@
 import {DEFAULT_INITIAL_CONFIGURATION, DEFAULT_GOAL_CONFIGURATION} from '../data/puzzleData.js';
 import {RenderModel} from '../render/RenderModel.js';
-import {createPuzzleProblem} from './problemFactories.js';
+import {
+  createPuzzleProblem,
+  PUZZLE_DEFAULT_HEURISTIC,
+  PUZZLE_HEURISTIC_OPTIONS,
+} from './problemFactories.js';
 
 export const puzzleProblem = createPuzzleProblem(
     DEFAULT_INITIAL_CONFIGURATION,
@@ -42,7 +46,7 @@ function drawPuzzle(ctx, viewport, model) {
   const board = model.board;
   if (!board) return;
 
-  const pad = 40;
+  const pad = 200;
   const boardSize = Math.min(widthCss, heightCss) - 2 * pad;
   const cellSize = boardSize / 3;
   const originX = (widthCss - boardSize) / 2;
@@ -101,10 +105,13 @@ function updatePuzzle(newState, previousState, model) {
 
 export const puzzleRenderModel = new RenderModel(resetPuzzle, updatePuzzle, drawPuzzle);
 
-export const puzzleBundle = Object.freeze({
+export const puzzleBundle = {
   id: 'puzzle',
   name: 'Puzzle',
   problem: puzzleProblem,
   renderModel: puzzleRenderModel,
-});
+  heuristics: PUZZLE_HEURISTIC_OPTIONS,
+  defaultHeuristicKey: PUZZLE_DEFAULT_HEURISTIC,
+  activeHeuristicKey: PUZZLE_DEFAULT_HEURISTIC,
+};
 

@@ -7,6 +7,7 @@ export class SimulationController {
     this.stepIntervalMs = options.stepIntervalMs ?? 600;
 
     this.selectedAlgorithmKey = options.algorithm ?? 'bfs';
+    this.selectedHeuristicKey = options.heuristicKey ?? null;
     this.isRunning = false;
     this.isComputing = false;
     this.activeRun = null;
@@ -33,12 +34,31 @@ export class SimulationController {
     this.selectedAlgorithmKey = algorithmKey;
   }
 
+  setHeuristicKey(heuristicKey) {
+    this.selectedHeuristicKey = heuristicKey;
+  }
+
   #ensureWorker() {
     if (!this._worker) {
       this._worker = new Worker(workerUrl, {type: 'module'});
       this._worker.addEventListener('message', (event) => this.#onWorkerMessage(event));
+      this._worker.addEventListener('error', (event) => {
+        console.error('Search worker error:', event.message || event);
+        this.#onWorkerFailure();
+      });
     }
     return this._worker;
+  }
+
+  /** Worker load/runtime failure: unblock UI waiting on search. */
+  #onWorkerFailure() {
+    if (this._worker) {
+      this._worker.terminate();
+      this._worker = null;
+    }
+    this.isComputing = false;
+    this.#finishSearchWait();
+    alert('Falha no worker de busca. Recarregue a página ou tente de novo.');
   }
 
   #finishSearchWait() {
@@ -65,11 +85,13 @@ export class SimulationController {
     const result = solution;
     if (!result || result.length === 0) {
       alert('Nenhuma solução encontrada!\n');
+      this.reset();
+      return;
     }
 
     console.log(result);
 
-    this.activeRun = result ?? [];
+    this.activeRun = result;
     this.stepCounter = 0;
     this.lastStepAt = performance.now();
     this.isRunning = this.activeRun.length > 0;
@@ -107,6 +129,7 @@ export class SimulationController {
         ticket,
         problemId: this.problemId,
         algorithmKey: this.selectedAlgorithmKey,
+        heuristicKey: this.selectedHeuristicKey,
         initialState: structuredClone(this.problem.initialState),
         goalState: structuredClone(this.problem.goalState),
       });

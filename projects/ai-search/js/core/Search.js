@@ -156,7 +156,7 @@ function depthFirstSearch(problem) {
 function depthLimitedSearch(problem, limit) {
   const initialNode = createSearchNode(problem.initialState);
   const frontier = [initialNode];
-  let result = null;
+  let cutoffOccurred = false;
 
   while (frontier.length > 0) {
     const node = frontier.pop();
@@ -164,7 +164,7 @@ function depthLimitedSearch(problem, limit) {
     if (problem.isGoal(node.state)) return node;
 
     if (node.depth >= limit) {
-      result = 'cutoff';
+      cutoffOccurred = true;
     } else if (!isCycle(node)) {
       for (const child of expand(problem, node)) {
         frontier.push(child);
@@ -172,7 +172,7 @@ function depthLimitedSearch(problem, limit) {
     }
   }
 
-  return result;
+  return cutoffOccurred ? 'cutoff' : null;
 }
 
 function isCycle(node) {
@@ -186,11 +186,14 @@ function isCycle(node) {
   return false;
 }
 
+const MAX_IDS_DEPTH = 2048;
+
 function iterativeDeepeningSearch(problem) {
-  for (let depth = 0; ; depth++) {
+  for (let depth = 0; depth < MAX_IDS_DEPTH; depth++) {
     const result = depthLimitedSearch(problem, depth);
     if (result !== 'cutoff') return result;
   }
+  return null;
 }
 
 function bestCostFirstSearch(problem, evaluationFunction) {
@@ -258,11 +261,17 @@ function recIDAstar(problem, node, threshold) {
   return min;
 }
 
+const MAX_IDASTAR_ROUNDS = 500_000;
+
 function iterativeDeepeningAStarSearch(problem) {
   const initialNode = createSearchNode(problem.initialState);
   let threshold = problem.heuristic(initialNode.state);
 
-  while (threshold !== Infinity) {
+  for (let round = 0; round < MAX_IDASTAR_ROUNDS; round++) {
+    if (!Number.isFinite(threshold)) {
+      return null;
+    }
+
     const result = recIDAstar(problem, initialNode, threshold);
 
     if (typeof result === 'object' && result !== null) {
@@ -270,6 +279,10 @@ function iterativeDeepeningAStarSearch(problem) {
     }
 
     if (result === Infinity) return null;
+
+    if (typeof result === 'number' && !(result > threshold)) {
+      return null;
+    }
 
     threshold = result;
   }
