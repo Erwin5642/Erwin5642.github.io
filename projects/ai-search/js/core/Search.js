@@ -186,10 +186,8 @@ function isCycle(node) {
   return false;
 }
 
-const MAX_IDS_DEPTH = 2048;
-
 function iterativeDeepeningSearch(problem) {
-  for (let depth = 0; depth < MAX_IDS_DEPTH; depth++) {
+  for (let depth = 0; depth < Infinity; depth++) {
     const result = depthLimitedSearch(problem, depth);
     if (result !== 'cutoff') return result;
   }
@@ -261,17 +259,14 @@ function recIDAstar(problem, node, threshold) {
   return min;
 }
 
-const MAX_IDASTAR_ROUNDS = 500_000;
-
 function iterativeDeepeningAStarSearch(problem) {
   const initialNode = createSearchNode(problem.initialState);
   let threshold = problem.heuristic(initialNode.state);
 
-  for (let round = 0; round < MAX_IDASTAR_ROUNDS; round++) {
+  for (let round = 0; round < Infinity; round++) {
     if (!Number.isFinite(threshold)) {
       return null;
     }
-
     const result = recIDAstar(problem, initialNode, threshold);
 
     if (typeof result === 'object' && result !== null) {
@@ -290,6 +285,43 @@ function iterativeDeepeningAStarSearch(problem) {
   return null;
 }
 
+function recursiveBestFirstSearch(problem) {
+  const initialNode = createSearchNode(problem.initialState);
+  initialNode.f = problem.heuristic(initialNode.state);
+
+  const {solution} = RBFS(problem, initialNode, Infinity);
+  return solution
+}
+
+function RBFS(problem, node, fLimit) {
+  if (problem.isGoal(node.state)) return {solution: node};
+
+  const successors = expand(problem, node);
+  if (successors.length === 0) return {solution: null, fValue: Infinity};
+
+  successors.forEach(s => {
+    s.f = Math.max(s.pathCost + problem.heuristic(s.state), node.f || 0);
+  });
+
+  while (true) {
+    successors.sort((a, b) => a.f - b.f);
+
+    const best = successors[0];
+
+    if (best.f > fLimit) return {solution: null, fValue: best.f};
+
+    const alternative = successors.length > 1 ? successors[1].f : Infinity;
+
+    const {solution, fValue} = RBFS(problem, best, Math.min(fLimit, alternative));
+
+    best.f = fValue;
+
+    if (solution !== null) {
+      return {solution, fValue};
+    }
+  }
+}
+
 export function search(problem, method) {
   searchStats.reset();
 
@@ -300,8 +332,13 @@ export function search(problem, method) {
     case 'bfs': result = breadthFirstSearch(problem); break;
     case 'dfs': result = depthFirstSearch(problem); break;
     case 'dijkstra': result = uniformCostSearch(problem); break;
+    case 'dls':
+      result = depthLimitedSearch(problem, 32);
+      result = result === 'cutoff' ? null : result;
+      break;
     case 'ids': result = iterativeDeepeningSearch(problem); break;
     case 'astar': result = aStarSearch(problem); break;
+    case 'rbfs': result = recursiveBestFirstSearch(problem); break;
     case 'greedy': result = greedySearch(problem); break;
     case 'idastar': result = iterativeDeepeningAStarSearch(problem); break;
     default: return null;

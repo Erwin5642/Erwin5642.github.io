@@ -38,24 +38,28 @@ export class SimulationController {
     this.selectedHeuristicKey = heuristicKey;
   }
 
-  #ensureWorker() {
+  /** One worker per search; tear down when the job ends or is canceled. */
+  #terminateWorkerSilently() {
     if (!this._worker) {
-      this._worker = new Worker(workerUrl, {type: 'module'});
-      this._worker.addEventListener('message', (event) => this.#onWorkerMessage(event));
-      this._worker.addEventListener('error', (event) => {
-        console.error('Search worker error:', event.message || event);
-        this.#onWorkerFailure();
-      });
+      return;
     }
-    return this._worker;
+    this._worker.terminate();
+    this._worker = null;
   }
 
-  /** Worker load/runtime failure: unblock UI waiting on search. */
+  #createSearchWorker() {
+    const worker = new Worker(workerUrl, {type: 'module'});
+    worker.addEventListener('message', (event) => this.#onWorkerMessage(event));
+    worker.addEventListener('error', (event) => {
+      console.error('Search worker error:', event.message || event);
+      this.#onWorkerFailure();
+    });
+    this._worker = worker;
+    return worker;
+  }
+
   #onWorkerFailure() {
-    if (this._worker) {
-      this._worker.terminate();
-      this._worker = null;
-    }
+    this.#terminateWorkerSilently();
     this.isComputing = false;
     this.#finishSearchWait();
     alert('Falha no worker de busca. Recarregue a página ou tente de novo.');
@@ -70,36 +74,46 @@ export class SimulationController {
   #onWorkerMessage(event) {
     const {ticket, ok, solution, error} = event.data;
     if (ticket !== this._searchSeq) {
+      console.warn('[Search worker] Ignoring stale result', {
+        messageTicket: ticket,
+        currentSeq: this._searchSeq,
+      });
       return;
     }
 
     this.isComputing = false;
 
-    if (!ok) {
-      console.error(error);
-      alert(`Erro na busca: ${error}`);
+    try {
+      if (!ok) {
+        console.error('[Search worker] Search failed:', error);
+        alert(`Erro na busca: ${error}`);
+        this.#finishSearchWait();
+        return;
+      }
+
+      const result = solution;
+      if (!result || result.length === 0) {
+        alert('Nenhuma solução encontrada!\n');
+        this.reset();
+        return;
+      }
+
+      console.log(result);
+
+      this.activeRun = result;
+      this.stepCounter = 0;
+      this.lastStepAt = performance.now();
+      this.isRunning = this.activeRun.length > 0;
       this.#finishSearchWait();
-      return;
+    } finally {
+      if (this._worker) {
+        this.#terminateWorkerSilently();
+      }
     }
-
-    const result = solution;
-    if (!result || result.length === 0) {
-      alert('Nenhuma solução encontrada!\n');
-      this.reset();
-      return;
-    }
-
-    console.log(result);
-
-    this.activeRun = result;
-    this.stepCounter = 0;
-    this.lastStepAt = performance.now();
-    this.isRunning = this.activeRun.length > 0;
-    this.#finishSearchWait();
   }
 
   /**
-   * Runs search on a worker. Resolves when the worker responds or after reset().
+   * Runs search in a Web Worker. Resolves when the worker responds or after reset().
    * @returns {Promise<void>}
    */
   start() {
@@ -108,9 +122,15 @@ export class SimulationController {
     }
 
     if (!this.problemId) {
-      console.warn('SimulationController: problemId missing; search skipped.');
+      console.warn(
+          'SimulationController: problemId missing; search skipped.',
+      );
       return Promise.resolve();
     }
+
+    this.#finishSearchWait();
+
+    this.#terminateWorkerSilently();
 
     this._searchSeq++;
     const ticket = this._searchSeq;
@@ -121,7 +141,7 @@ export class SimulationController {
     this.lastStepAt = 0;
 
     this.isComputing = true;
-    const worker = this.#ensureWorker();
+    const worker = this.#createSearchWorker();
 
     return new Promise((resolve) => {
       this._pendingSearchResolve = resolve;
@@ -143,6 +163,7 @@ export class SimulationController {
   }
 
   reset() {
+    this.#terminateWorkerSilently();
     this._searchSeq++;
     this.isComputing = false;
     this.#finishSearchWait();
