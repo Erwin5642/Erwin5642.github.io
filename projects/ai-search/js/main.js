@@ -15,8 +15,15 @@ ui.bind();
 
 function loop() {
   ui.sync();
-  const step = simulation.tick(performance.now());
-  if (step) renderer.renderModel.update(step);
+  let stepsInLoop = 1;
+  if (simulation.stepIntervalMs < 10) {
+    stepsInLoop = 100;
+  }
+  for (let i = 0; i < stepsInLoop; i++) {
+    console.log(i);
+    const step = simulation.tick(performance.now());
+    if (step) renderer.renderModel.update(step);
+  }
   renderer.draw();
 
   requestAnimationFrame(loop);
