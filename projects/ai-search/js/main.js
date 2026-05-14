@@ -20,7 +20,6 @@ function loop() {
     stepsInLoop = 100;
   }
   for (let i = 0; i < stepsInLoop; i++) {
-    console.log(i);
     const step = simulation.tick(performance.now());
     if (step) renderer.renderModel.update(step);
   }
